@@ -1,0 +1,17 @@
+{"properties": [
+  {
+    "name": "jwt.secret.key",
+    "type": "java.lang.String",
+    "description": "A description for 'jwt.secret.key'"
+  },
+  {
+    "name": "refresh.token.expiry.in.seconds",
+    "type": "java.lang.String",
+    "description": "A description for 'refresh.token.expiry.in.seconds'"
+  },
+  {
+    "name": "access.token.expiry.in.seconds",
+    "type": "java.lang.String",
+    "description": "A description for 'access.token.expiry.in.seconds'"
+  }
+]}
