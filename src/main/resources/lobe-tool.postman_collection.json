@@ -1,0 +1,129 @@
+{
+	"info": {
+		"name": "lobe-tool",
+		"_postman_id": "dddc0cc6-f06a-f74c-e063-6477b4f8d03d",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "ankitx@gmail.com",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "ankit",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "qwerty",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "affiliation",
+							"value": "xaviers",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "roleId",
+							"value": "3",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/user/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"user",
+						"register"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/api/user/login?email=ankitx@gmail.com&password=qwerty",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"user",
+						"login"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "ankitx@gmail.com",
+							"equals": true
+						},
+						{
+							"key": "password",
+							"value": "qwerty",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "token refresh",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmtpdHhAZ21haWwuY29tIiwicGVybWlzc2lvbnMiOlsiYXNzaWduX3J1YnJpayIsImNyZWF0ZV9ydWJyaWsiLCJnZW5lcmF0b3JfYW5hbHl0aWNzIl0sInRva2VuVHlwZSI6InJlZnJlc2giLCJpc3MiOiJhbmtpdCIsImlhdCI6MTU1Mzg2MTAxNywiZXhwIjoxNTU1MDcwNjE3fQ.tRNpfD_xOYyDxRxSuENgZmaK0e-3REINSnRogqe8e_5rf6Om_-4ht_QD3to5odchqV-LUhlQXTl9Yf-y7w6INQ"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "localhost:8080/api/user/token-refresh",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"user",
+						"token-refresh"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
