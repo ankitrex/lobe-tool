@@ -19,6 +19,7 @@ import xyz.qwerty.lobetoolapis.service.AuthUserService;
 import xyz.qwerty.lobetoolapis.service.UserService;
 import xyz.qwerty.lobetoolapis.util.PasswordHashing;
 import xyz.qwerty.lobetoolapis.util.ResponseBuilder;
+import xyz.qwerty.lobetoolapis.vo.UserVo;
 
 @RestController
 @RequestMapping("/api/user")
@@ -64,8 +65,8 @@ public class UserController {
 
 		if (!authUserService.validateUserCredentials(email, password)) {
 
-			responseBuilder.setCode(HttpStatus.UNAUTHORIZED.value());
-			responseBuilder.setStatus(HttpStatus.UNAUTHORIZED.getReasonPhrase());
+			responseBuilder.setCode(HttpStatus.BAD_REQUEST.value());
+			responseBuilder.setStatus(HttpStatus.BAD_REQUEST.getReasonPhrase());
 			responseBuilder.setMessage("Invalid credentials");
 		}
 		else {
@@ -94,4 +95,22 @@ public class UserController {
 
 		return new ResponseEntity<>(responseBuilder, HttpStatus.OK);
 	}
+
+	@GetMapping("/profile")
+	ResponseEntity<ResponseBuilder> userProfile(@RequestHeader(name = "Authorization") String authorization) {
+
+		String accessToken = authUserService.getAccessTokenFromHeader(authorization);
+
+		String userId = authUserService.getUserId(accessToken);
+
+		UserVo userVo = userService.getUserProfile(userId);
+
+		ResponseBuilder responseBuilder = new ResponseBuilder();
+		responseBuilder.setCode(HttpStatus.OK.value());
+		responseBuilder.setStatus(HttpStatus.OK.getReasonPhrase());
+		responseBuilder.setData(userVo);
+
+		return new ResponseEntity<>(responseBuilder, HttpStatus.OK);
+	}
+
 }

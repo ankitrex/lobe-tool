@@ -80,7 +80,9 @@ public class AuthUserServiceImpl implements AuthUserService {
 
 		Claims tokenClaims = getClaimsFromToken(refreshToken);
 
-		checkTokenTypeAndExpiry(tokenClaims, Constants.TOKEN_TYPE_REFRESH);
+		if (!checkTokenTypeAndExpiry(tokenClaims, Constants.TOKEN_TYPE_REFRESH)) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "WRONG_TOKEN_TYPE");
+		}
 
 		String userId = tokenClaims.getSubject();
 
@@ -105,6 +107,26 @@ public class AuthUserServiceImpl implements AuthUserService {
 		return auth[1];
 	}
 
+	@Override
+	public String getUserId(String accessToken) {
+
+		Claims tokenClaims = getClaimsFromToken(accessToken);
+
+		return tokenClaims.getSubject();
+	}
+
+	@Override
+	public Boolean checkUserAccess(String accessToken, String permission) {
+
+		Claims tokenClaims = getClaimsFromToken(accessToken);
+
+		if (!checkTokenTypeAndExpiry(tokenClaims, Constants.TOKEN_TYPE_ACCESS) || !tokenClaims.get(KEY_PERMISSIONS, List.class).contains(permission)) {
+			return false;
+		}
+
+		return true;
+	}
+
 	private List<String> getPermissions(String userId) {
 
 		List<String> permissions = new ArrayList<>();
@@ -127,11 +149,12 @@ public class AuthUserServiceImpl implements AuthUserService {
 		}
 	}
 
-	private void checkTokenTypeAndExpiry(Claims tokenClaims, String tokenType) {
+	private Boolean checkTokenTypeAndExpiry(Claims tokenClaims, String tokenType) {
 
 		if (!tokenType.equals(tokenClaims.get(KEY_TOKEN_TYPE, String.class))) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "WRONG_TOKEN_TYPE");
+			return false;
 		}
+		return true;
 	}
 
 }

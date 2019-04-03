@@ -7,6 +7,27 @@
 	},
 	"item": [
 		{
+			"name": "all roles",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "localhost:8080/open/get-roles",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"open",
+						"get-roles"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
 			"name": "register",
 			"request": {
 				"method": "POST",
@@ -119,6 +140,120 @@
 						"api",
 						"user",
 						"token-refresh"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "user profile",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmtpdHhAZ21haWwuY29tIiwicGVybWlzc2lvbnMiOlsiYXNzaWduX3J1YnJpayIsImNyZWF0ZV9ydWJyaWsiLCJnZW5lcmF0b3JfYW5hbHl0aWNzIl0sInRva2VuVHlwZSI6ImFjY2VzcyIsImlzcyI6ImFua2l0IiwiaWF0IjoxNTU0Mjk2OTU3LCJleHAiOjE1NTQzODMzNTd9.NuhhoyXT7KrO_N-RIVc3FRaUEs7Qgv0hfjtk24AKCsrLvOCPOWDTWMetFg6IspMkbDNO1j3OKs1EpBFhdoQyEQ"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "localhost:8080/api/user/profile",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"user",
+						"profile"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "all rubrik types",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/open/get-rubrik-types",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"open",
+						"get-rubrik-types"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "all dimensions",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "localhost:8080/open/get-dimensions",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"open",
+						"get-dimensions"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "create rubrik",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmtpdHp4MUBnbWFpbC5jb20iLCJwZXJtaXNzaW9ucyI6WyJjcmVhdGVfcnVicmlrIiwidmlld19ydWJyaWsiLCJ1cGRhdGVfcnVicmlrIiwiZGVsZXRlX3J1YnJpayIsImFzc2lnbl9ydWJyaWsiLCJ2aWV3X2xvYmVzIiwiY3JlYXRlX2N1c3RvbV9sb2JlIiwidmlld19jdXN0b21fbG9iZSIsInVwZGF0ZV9jdXN0b21fbG9iZSIsImRlbGV0ZV9jdXN0b21fbG9iZSIsInZpZXdfZGltZW5zaW9uX3F1ZXN0aW9ucyJdLCJ0b2tlblR5cGUiOiJhY2Nlc3MiLCJpc3MiOiJhbmtpdCIsImlhdCI6MTU1MjA0NTQ0NSwiZXhwIjoxNTUyMTMxODQ1fQ.cInkCr8r0PT4NUrE5ZtNoYSlZpMDWlW4Y1diFllOmA0XBBiozz-cWu-pZZhyK5BCl8NnTxYED-9KOE1ONGL1xw"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "rubrikTypeId",
+							"value": "3",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "dimensionIds",
+							"value": "2,3,4",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/rubrik/create-rubrik",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"rubrik",
+						"create-rubrik"
 					]
 				},
 				"description": ""

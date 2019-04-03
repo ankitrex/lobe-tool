@@ -1,5 +1,7 @@
 package xyz.qwerty.lobetoolapis.service.impl;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,7 @@ import xyz.qwerty.lobetoolapis.repository.RoleRepository;
 import xyz.qwerty.lobetoolapis.repository.UserRepository;
 import xyz.qwerty.lobetoolapis.repository.UserRoleRepository;
 import xyz.qwerty.lobetoolapis.service.UserService;
+import xyz.qwerty.lobetoolapis.vo.UserVo;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -61,6 +64,25 @@ public class UserServiceImpl implements UserService {
 	private Boolean userExists(String emailId) {
 
 		return userRepository.existsById(emailId);
+	}
+
+	@Override
+	public UserVo getUserProfile(String userId) {
+
+		Optional<User> user = userRepository.findById(userId);
+		if (user.isPresent()) {
+
+			User u = user.get();
+			UserVo userVo = new UserVo();
+			userVo.setEmail(u.getEmail());
+			userVo.setName(u.getName());
+			userVo.setAffiliation(u.getAffiliation());
+			userVo.setStatus(u.getStatus());
+			return userVo;
+		}
+		else {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid user");
+		}
 	}
 
 }

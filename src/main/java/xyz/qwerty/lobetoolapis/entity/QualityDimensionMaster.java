@@ -30,6 +30,9 @@ public class QualityDimensionMaster implements Serializable {
 	@Column(name = "dimension_name", nullable = false, length = 50)
 	private String							dimensionName;
 
-	@OneToMany(mappedBy = "qualityDimensionMaster")
+	@OneToMany(mappedBy = "rubrikQualityDimensionsKey.qualityDimensionMaster")
 	private Set<RubrikQualityDimensions>	rubrikQualityDimensions;
+
+	@OneToMany(mappedBy = "qualityDimensionMaster")
+	private Set<QuestionMaster>				questionMaster;
 }

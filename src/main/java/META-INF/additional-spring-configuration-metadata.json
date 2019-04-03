@@ -13,5 +13,10 @@
     "name": "access.token.expiry.in.seconds",
     "type": "java.lang.String",
     "description": "A description for 'access.token.expiry.in.seconds'"
+  },
+  {
+    "name": "custom.rubrik.id",
+    "type": "java.lang.String",
+    "description": "A description for 'custom.rubrik.id'"
   }
 ]}

@@ -9,4 +9,8 @@ public interface AuthUserService {
 	String getAccessToken(String refreshToken);
 
 	String getAccessTokenFromHeader(String authorization);
+
+	String getUserId(String accessToken);
+
+	Boolean checkUserAccess(String accessToken, String permission);
 }

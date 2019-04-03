@@ -10,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import lombok.Getter;
@@ -57,18 +59,20 @@ public class QuestionMaster implements Serializable {
 	@Column(name = "score_3_images", nullable = false, length = 1000)
 	private String					score3Images;
 
-	@Column(name = "rubrik_type", nullable = false, length = 20)
-	private String					rubrikType;
-
-	@Column(name = "quality_dimension", nullable = false, length = 50)
-	private String					qualityDimension;
-
 	@Column(nullable = false, length = 3)
 	private boolean					optional;
 
 	@OneToMany(mappedBy = "questionMaster")
 	private Set<LobeScores>			lobeScores;
 
-	@OneToMany(mappedBy = "questionMaster")
+	@OneToMany(mappedBy = "rubrikQuestionsKey.questionMaster")
 	private Set<RubrikQuestions>	rubrikQuestions;
+
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "rubrik_type", nullable = false)
+	private RubrikTypeMaster		rubrikTypeMaster;
+
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "quality_dimension_id", nullable = false)
+	private QualityDimensionMaster	qualityDimensionMaster;
 }

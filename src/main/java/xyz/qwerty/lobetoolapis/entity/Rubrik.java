@@ -30,11 +30,8 @@ public class Rubrik implements Serializable {
 	@Column(unique = true, nullable = false, precision = 10)
 	private int								id;
 
-	@Column(nullable = false, length = 100)
+	@Column(nullable = true, length = 100)
 	private String							name;
-
-	@Column(nullable = false, length = 20)
-	private String							type;
 
 	@Column(nullable = false, length = 20)
 	private String							status;
@@ -42,7 +39,7 @@ public class Rubrik implements Serializable {
 	@Column(name = "created_ts", nullable = false)
 	private LocalDateTime					createdTs;
 
-	@Column(name = "updated_ts", nullable = false)
+	@Column(name = "updated_ts", nullable = true)
 	private LocalDateTime					updatedTs;
 
 	@OneToMany(mappedBy = "rubrik")
@@ -52,9 +49,13 @@ public class Rubrik implements Serializable {
 	@JoinColumn(name = "user_email", nullable = false)
 	private User							user;
 
-	@OneToMany(mappedBy = "rubrik")
+	@OneToMany(mappedBy = "rubrikQualityDimensionsKey.rubrik")
 	private Set<RubrikQualityDimensions>	rubrikQualityDimensions;
 
-	@OneToMany(mappedBy = "rubrik")
+	@OneToMany(mappedBy = "rubrikQuestionsKey.rubrik")
 	private Set<RubrikQuestions>			rubrikQuestions;
+
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "type", nullable = false)
+	private RubrikTypeMaster				rubrikTypeMaster;
 }
