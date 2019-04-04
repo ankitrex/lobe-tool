@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Apr 03, 2019 at 03:37 PM
+-- Generation Time: Apr 04, 2019 at 04:16 PM
 -- Server version: 10.1.21-MariaDB
 -- PHP Version: 5.6.30
 
@@ -137,8 +137,8 @@ INSERT INTO `question_master` (`id`, `optional`, `quality_dimension_id`, `questi
 (11, b'0', 2, 'w3', '', 1, 'sda', '', 'adfs', '', 'dasvx', '', 'czxvw', ''),
 (12, b'0', 2, 'w4', '', 1, 'sda', '', 'adfs', '', 'dasvx', '', 'czxvw', ''),
 (13, b'0', 3, 'e1', '', 1, 'sda', '', 'adfs', '', 'dasvx', '', 'czxvw', ''),
-(14, b'0', 3, 'e2', '', 1, 'sda', '', 'adfs', '', 'dasvx', '', 'czxvw', ''),
-(15, b'0', 3, 'e3', '', 1, 'sda', '', 'adfs', '', 'dasvx', '', 'czxvw', ''),
+(14, b'0', 4, 'e2', '', 1, 'sda', '', 'adfs', '', 'dasvx', '', 'czxvw', ''),
+(15, b'1', 4, 'e3', '', 1, 'sda', '', 'adfs', '', 'dasvx', '', 'czxvw', ''),
 (16, b'0', 1, 'q1', '', 2, 'sda', '', 'adfs', '', 'dasvx', '', 'czxvw', ''),
 (17, b'0', 1, 'q2', '', 2, 'sda', '', 'adfs', '', 'dasvx', '', 'czxvw', ''),
 (18, b'0', 1, 'q3', '', 2, 'sda', '', 'adfs', '', 'dasvx', '', 'czxvw', ''),
@@ -158,8 +158,8 @@ INSERT INTO `question_master` (`id`, `optional`, `quality_dimension_id`, `questi
 (32, b'0', 3, 'e1', '', 2, 'sda', '', 'adfs', '', 'dasvx', '', 'czxvw', ''),
 (33, b'0', 3, 'e2', '', 2, 'sda', '', 'adfs', '', 'dasvx', '', 'czxvw', ''),
 (34, b'0', 3, 'e3', '', 2, 'sda', '', 'adfs', '', 'dasvx', '', 'czxvw', ''),
-(35, b'0', 3, 'e4', '', 2, 'sda', '', 'adfs', '', 'dasvx', '', 'czxvw', ''),
-(36, b'0', 3, 'e5', '', 2, 'sda', '', 'adfs', '', 'dasvx', '', 'czxvw', '');
+(35, b'0', 4, 'e4', '', 2, 'sda', '', 'adfs', '', 'dasvx', '', 'czxvw', ''),
+(36, b'0', 4, 'e5', '', 2, 'sda', '', 'adfs', '', 'dasvx', '', 'czxvw', '');
 
 -- --------------------------------------------------------
 
@@ -225,9 +225,9 @@ CREATE TABLE `rubrik` (
 --
 
 INSERT INTO `rubrik` (`id`, `created_ts`, `name`, `status`, `type`, `updated_ts`, `user_email`) VALUES
-(3, '2019-04-03 19:01:53.000000', 'LOBE_LITE_3', 'incomplete', 1, '2019-04-03 19:01:53.000000', 'ankitx@gmail.com'),
-(4, '2019-04-03 19:02:21.000000', 'LOBE_PREMIUM_4', 'incomplete', 2, '2019-04-03 19:02:21.000000', 'ankitx@gmail.com'),
-(5, '2019-04-03 19:04:14.000000', 'LOBE_PREMIUM_5', 'incomplete', 2, '2019-04-03 19:04:24.000000', 'ankitx@gmail.com');
+(11, '2019-04-04 16:19:37.000000', 'LOBE_LITE_11', 'incomplete', 1, '2019-04-04 16:19:37.000000', 'ankitx@gmail.com'),
+(12, '2019-04-04 16:24:42.000000', 'LOBE_PREMIUM_12', 'incomplete', 2, '2019-04-04 16:24:42.000000', 'ankitx@gmail.com'),
+(13, '2019-04-04 16:28:39.000000', 'LOBE_CUSTOM_13', 'incomplete', 3, '2019-04-04 16:28:39.000000', 'ankitx@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -245,18 +245,16 @@ CREATE TABLE `rubrik_quality_dimensions` (
 --
 
 INSERT INTO `rubrik_quality_dimensions` (`rubrik_id`, `quality_dimension_id`) VALUES
-(3, 1),
-(3, 2),
-(3, 3),
-(3, 4),
-(4, 1),
-(4, 2),
-(4, 3),
-(4, 4),
-(5, 1),
-(5, 2),
-(5, 3),
-(5, 4);
+(11, 1),
+(11, 2),
+(11, 3),
+(11, 4),
+(12, 1),
+(12, 2),
+(12, 3),
+(12, 4),
+(13, 1),
+(13, 2);
 
 -- --------------------------------------------------------
 
@@ -274,63 +272,41 @@ CREATE TABLE `rubrik_questions` (
 --
 
 INSERT INTO `rubrik_questions` (`rubrik_id`, `question_id`) VALUES
-(3, 1),
-(3, 2),
-(3, 3),
-(3, 4),
-(3, 5),
-(3, 6),
-(3, 7),
-(3, 8),
-(3, 9),
-(3, 10),
-(3, 11),
-(3, 12),
-(3, 13),
-(3, 14),
-(3, 15),
-(4, 16),
-(4, 17),
-(4, 18),
-(4, 19),
-(4, 20),
-(4, 21),
-(4, 22),
-(4, 23),
-(4, 24),
-(4, 25),
-(4, 26),
-(4, 27),
-(4, 28),
-(4, 29),
-(4, 30),
-(4, 31),
-(4, 32),
-(4, 33),
-(4, 34),
-(4, 35),
-(4, 36),
-(5, 16),
-(5, 17),
-(5, 18),
-(5, 19),
-(5, 20),
-(5, 21),
-(5, 22),
-(5, 23),
-(5, 24),
-(5, 25),
-(5, 26),
-(5, 27),
-(5, 28),
-(5, 29),
-(5, 30),
-(5, 31),
-(5, 32),
-(5, 33),
-(5, 34),
-(5, 35),
-(5, 36);
+(11, 1),
+(11, 2),
+(11, 3),
+(11, 4),
+(11, 5),
+(11, 6),
+(11, 7),
+(11, 8),
+(11, 9),
+(11, 10),
+(11, 11),
+(11, 12),
+(11, 13),
+(11, 14),
+(12, 16),
+(12, 17),
+(12, 18),
+(12, 19),
+(12, 20),
+(12, 21),
+(12, 22),
+(12, 23),
+(12, 24),
+(12, 25),
+(12, 26),
+(12, 27),
+(12, 28),
+(12, 29),
+(12, 30),
+(12, 31),
+(12, 32),
+(12, 33),
+(12, 34),
+(12, 35),
+(12, 36);
 
 -- --------------------------------------------------------
 
@@ -509,7 +485,7 @@ ALTER TABLE `role`
 -- AUTO_INCREMENT for table `rubrik`
 --
 ALTER TABLE `rubrik`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 --
 -- AUTO_INCREMENT for table `rubrik_type_master`
 --

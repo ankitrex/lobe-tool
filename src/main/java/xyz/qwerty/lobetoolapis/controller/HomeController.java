@@ -27,26 +27,4 @@ public class HomeController {
 
 		return new ResponseEntity<>(responseBuilder, HttpStatus.OK);
 	}
-
-	@GetMapping("/get-dimensions")
-	public ResponseEntity<ResponseBuilder> getAllDimensions() {
-
-		ResponseBuilder responseBuilder = new ResponseBuilder();
-		responseBuilder.setCode(HttpStatus.OK.value());
-		responseBuilder.setStatus(HttpStatus.OK.getReasonPhrase());
-		responseBuilder.setData(lobeService.getAllDimensions());
-
-		return new ResponseEntity<>(responseBuilder, HttpStatus.OK);
-	}
-
-	@GetMapping("/get-rubrik-types")
-	public ResponseEntity<ResponseBuilder> getAllRubrikTypes() {
-
-		ResponseBuilder responseBuilder = new ResponseBuilder();
-		responseBuilder.setCode(HttpStatus.OK.value());
-		responseBuilder.setStatus(HttpStatus.OK.getReasonPhrase());
-		responseBuilder.setData(lobeService.getAllRubrikTypes());
-
-		return new ResponseEntity<>(responseBuilder, HttpStatus.OK);
-	}
 }

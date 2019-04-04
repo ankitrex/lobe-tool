@@ -1,9 +1,11 @@
 package xyz.qwerty.lobetoolapis.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
 
 import xyz.qwerty.lobetoolapis.entity.QualityDimensionMaster;
+import xyz.qwerty.lobetoolapis.entity.QuestionMaster;
 import xyz.qwerty.lobetoolapis.entity.Rubrik;
 import xyz.qwerty.lobetoolapis.entity.RubrikQualityDimensions;
 import xyz.qwerty.lobetoolapis.entity.RubrikQualityDimensionsKey;
@@ -22,11 +25,15 @@ import xyz.qwerty.lobetoolapis.entity.RubrikQuestionsKey;
 import xyz.qwerty.lobetoolapis.entity.RubrikTypeMaster;
 import xyz.qwerty.lobetoolapis.entity.User;
 import xyz.qwerty.lobetoolapis.repository.QualityDimensionMasterRepository;
+import xyz.qwerty.lobetoolapis.repository.QuestionMasterRepository;
 import xyz.qwerty.lobetoolapis.repository.RubrikQualityDimensionsRepository;
 import xyz.qwerty.lobetoolapis.repository.RubrikQuestionsRepository;
 import xyz.qwerty.lobetoolapis.repository.RubrikRepository;
 import xyz.qwerty.lobetoolapis.repository.RubrikTypeMasterRepository;
+import xyz.qwerty.lobetoolapis.repository.UserRepository;
 import xyz.qwerty.lobetoolapis.service.RubrikService;
+import xyz.qwerty.lobetoolapis.vo.DimensionVo;
+import xyz.qwerty.lobetoolapis.vo.QuestionVo;
 import xyz.qwerty.lobetoolapis.vo.RubrikVo;
 
 @Service
@@ -47,31 +54,49 @@ public class RubrikServiceImpl implements RubrikService {
 	@Autowired
 	RubrikQuestionsRepository			rubrikQuestionsRepository;
 
+	@Autowired
+	UserRepository						userRepository;
+
+	@Autowired
+	QuestionMasterRepository			questionMasterRepository;
+
 	@Value("${custom.rubrik.id}")
 	private Integer						customRubrikId;
 
 	@Override
 	public RubrikVo createRubrik(String userId, Integer rubrikTypeId, String dimensionIds) {
 
-		if (StringUtils.isEmpty(dimensionIds)) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No dimension ids found");
-		}
-
+		// check if rubrik type is valid
 		Optional<RubrikTypeMaster> rubrikType = rubrikTypeMasterRepository.findById(rubrikTypeId);
-
 		if (!rubrikType.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Rubrik Type Id");
 		}
 
+		// fetch all quality dimensions
 		List<Integer> allQualityDimensions = qualityDimensionMasterRepository.findAll().stream().map(QualityDimensionMaster::getId).collect(Collectors.toList());
 
-		List<Integer> rubrikDimensions = Arrays.asList(dimensionIds.split(",")).stream().map(Integer::parseInt).collect(Collectors.toList());
+		List<Integer> rubrikDimensions;
 
-		rubrikDimensions.forEach(a -> {
-			if (!allQualityDimensions.contains(a)) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid dimension id found " + a);
+		// if custom lobe then change dimensions else consider all dimensions
+		if (customRubrikId.equals(rubrikTypeId)) {
+
+			if (StringUtils.isEmpty(dimensionIds)) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No dimension ids found");
 			}
-		});
+
+			rubrikDimensions = Arrays.asList(dimensionIds.split(",")).stream().map(Integer::parseInt).collect(Collectors.toList());
+
+			rubrikDimensions.forEach(a -> {
+				if (!allQualityDimensions.contains(a)) {
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid dimension id found " + a);
+				}
+			});
+
+		}
+		else {
+
+			rubrikDimensions = allQualityDimensions;
+		}
 
 		User user = new User();
 		user.setEmail(userId);
@@ -91,6 +116,7 @@ public class RubrikServiceImpl implements RubrikService {
 
 		rubrikRepository.save(rubrik);
 
+		// insert values into rubrik quality dimensions
 		Rubrik r = rubrik;
 		List<RubrikQualityDimensions> rubrikQualityDimensions = rubrikDimensions.stream().map(id -> {
 
@@ -98,9 +124,11 @@ public class RubrikServiceImpl implements RubrikService {
 			qualityDimension.setId(id);
 
 			RubrikQualityDimensions rubrikQualityDimension = new RubrikQualityDimensions();
+
 			RubrikQualityDimensionsKey rubrikQualityDimensionKey = new RubrikQualityDimensionsKey();
 			rubrikQualityDimensionKey.setRubrik(r);
 			rubrikQualityDimensionKey.setQualityDimensionMaster(qualityDimension);
+
 			rubrikQualityDimension.setRubrikQualityDimensionsKey(rubrikQualityDimensionKey);
 
 			return rubrikQualityDimension;
@@ -108,11 +136,13 @@ public class RubrikServiceImpl implements RubrikService {
 
 		rubrikQualityDimensionsRepository.saveAll(rubrikQualityDimensions);
 
+		// add questions to the rubrik-questions mapping table
 		if (!customRubrikId.equals(rubrikTypeMaster.getId())) {
 
-			List<RubrikQuestions> rubrikQuestions = rubrikTypeMaster.getQuestionMaster().stream().map(qm -> {
+			List<RubrikQuestions> rubrikQuestions = rubrikTypeMaster.getQuestionMaster().stream().filter(qm -> !qm.isOptional()).map(qm -> {
 
 				RubrikQuestions rubrikQuestion = new RubrikQuestions();
+
 				RubrikQuestionsKey rubrikQuestionKey = new RubrikQuestionsKey();
 				rubrikQuestionKey.setQuestionMaster(qm);
 				rubrikQuestionKey.setRubrik(r);
@@ -124,14 +154,124 @@ public class RubrikServiceImpl implements RubrikService {
 			rubrikQuestionsRepository.saveAll(rubrikQuestions);
 		}
 
+		return getRubrikVo(rubrik);
+	}
+
+	@Override
+	public List<RubrikVo> getAllRubriks(String userId) {
+
+		Optional<User> user = userRepository.findById(userId);
+
+		if (user.isPresent()) {
+
+			Set<Rubrik> rubriks = user.get().getRubrik();
+
+			return rubriks.stream().map(r -> getRubrikVo(r)).collect(Collectors.toList());
+		}
+
+		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found");
+	}
+
+	@Override
+	public RubrikVo getRubrikDetails(String userId, Integer rubrikId) {
+
+		Optional<Rubrik> result = rubrikRepository.findById(rubrikId);
+		if (result.isPresent()) {
+
+			Rubrik rubrik = result.get();
+			if (!userId.equals(rubrik.getUser().getEmail())) {
+				throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Rubrik doesn't belong to this user");
+			}
+
+			return getCompleteRubrikVo(rubrik);
+		}
+
+		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid rubrik id");
+	}
+
+	@Override
+	public DimensionVo getDimensionVo(Integer dimensionId, Integer rubrikTypeId) {
+
+		DimensionVo dimensionVo = new DimensionVo();
+		dimensionVo.setId(dimensionId);
+
+		List<QuestionMaster> questions = questionMasterRepository.findByQualityDimensionMasterIdAndRubrikTypeMasterId(dimensionId, rubrikTypeId);
+
+		List<QuestionVo> questionVoList = questions.stream().map(q -> getQuestionVo(q)).collect(Collectors.toList());
+		dimensionVo.setQuestions(questionVoList);
+
+		return dimensionVo;
+	}
+
+	private RubrikVo getRubrikVo(Rubrik rubrik) {
+
 		RubrikVo rubrikVo = new RubrikVo();
 		rubrikVo.setId(rubrik.getId());
 		rubrikVo.setName(rubrik.getName());
 		rubrikVo.setStatus(rubrik.getStatus());
+		rubrikVo.setRubrikType(rubrik.getRubrikTypeMaster().getName());
 		rubrikVo.setCreatedTs(rubrik.getCreatedTs());
 		rubrikVo.setUpdatedTs(rubrik.getUpdatedTs());
 
 		return rubrikVo;
 	}
 
+	private RubrikVo getCompleteRubrikVo(Rubrik rubrik) {
+
+		RubrikVo rubrikVo = getRubrikVo(rubrik);
+
+		Set<RubrikQualityDimensions> dimensions = rubrik.getRubrikQualityDimensions();
+		Set<RubrikQuestions> questions = rubrik.getRubrikQuestions();
+
+		rubrikVo.setDimensions(getDimensionMapping(dimensions, questions));
+
+		return rubrikVo;
+	}
+
+	private List<DimensionVo> getDimensionMapping(Set<RubrikQualityDimensions> dimensions, Set<RubrikQuestions> questions) {
+
+		List<DimensionVo> dimensionVoList = new ArrayList<>();
+
+		List<QuestionVo> questionVoList = questions.stream().map(q -> {
+			QuestionMaster question = q.getRubrikQuestionsKey().getQuestionMaster();
+			return getQuestionVo(question);
+
+		}).collect(Collectors.toList());
+
+		dimensions.forEach(d -> {
+			QualityDimensionMaster dimension = d.getRubrikQualityDimensionsKey().getQualityDimensionMaster();
+
+			DimensionVo dimensionVo = new DimensionVo();
+			dimensionVo.setId(dimension.getId());
+			dimensionVo.setDimensionName(dimension.getDimensionName());
+
+			List<QuestionVo> rubrikQuestions = questionVoList.stream().filter(q -> q.getDimensionId() == dimensionVo.getId()).collect(Collectors.toList());
+			dimensionVo.setQuestions(rubrikQuestions);
+
+			dimensionVoList.add(dimensionVo);
+		});
+
+		return dimensionVoList;
+	}
+
+	private QuestionVo getQuestionVo(QuestionMaster questionMaster) {
+
+		QuestionVo questionVo = new QuestionVo();
+
+		questionVo.setId(questionMaster.getId());
+		questionVo.setOptional(questionMaster.isOptional());
+		questionVo.setQuestion(questionMaster.getQuestion());
+		questionVo.setQuestionMeta(questionMaster.getQuestionMeta());
+		questionVo.setScore0(questionMaster.getScore0());
+		questionVo.setScore0Images(questionMaster.getScore0Images());
+		questionVo.setScore1(questionMaster.getScore1());
+		questionVo.setScore1Images(questionMaster.getScore1Images());
+		questionVo.setScore2(questionMaster.getScore2());
+		questionVo.setScore2Images(questionMaster.getScore2Images());
+		questionVo.setScore3(questionMaster.getScore3());
+		questionVo.setScore3Images(questionMaster.getScore3Images());
+		questionVo.setDimensionId(questionMaster.getQualityDimensionMaster().getId());
+
+		return questionVo;
+	}
 }

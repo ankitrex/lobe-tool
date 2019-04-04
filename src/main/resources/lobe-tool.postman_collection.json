@@ -177,17 +177,22 @@
 			"name": "all rubrik types",
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmtpdHhAZ21haWwuY29tIiwicGVybWlzc2lvbnMiOlsiYXNzaWduX3J1YnJpayIsImNyZWF0ZV9ydWJyaWsiLCJnZW5lcmF0b3JfYW5hbHl0aWNzIl0sInRva2VuVHlwZSI6ImFjY2VzcyIsImlzcyI6ImFua2l0IiwiaWF0IjoxNTU0MzYwNDU3LCJleHAiOjE1NTQ0NDY4NTd9.yT3hjzTf6xc9REZPYR9Bjj1qCbABKF-auNVyogl0HjbRBOutOSVn4PwfmF7aF13ZPbUhNQbCt8zs6pcaUKQ81w"
+					}
+				],
 				"body": {},
 				"url": {
-					"raw": "http://localhost:8080/open/get-rubrik-types",
+					"raw": "http://localhost:8080/api/get-rubrik-types",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"open",
+						"api",
 						"get-rubrik-types"
 					]
 				},
@@ -199,16 +204,21 @@
 			"name": "all dimensions",
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmtpdHhAZ21haWwuY29tIiwicGVybWlzc2lvbnMiOlsiYXNzaWduX3J1YnJpayIsImNyZWF0ZV9ydWJyaWsiLCJnZW5lcmF0b3JfYW5hbHl0aWNzIl0sInRva2VuVHlwZSI6ImFjY2VzcyIsImlzcyI6ImFua2l0IiwiaWF0IjoxNTU0MzYwNDU3LCJleHAiOjE1NTQ0NDY4NTd9.yT3hjzTf6xc9REZPYR9Bjj1qCbABKF-auNVyogl0HjbRBOutOSVn4PwfmF7aF13ZPbUhNQbCt8zs6pcaUKQ81w"
+					}
+				],
 				"body": {},
 				"url": {
-					"raw": "localhost:8080/open/get-dimensions",
+					"raw": "localhost:8080/api/get-dimensions",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"open",
+						"api",
 						"get-dimensions"
 					]
 				},
@@ -223,7 +233,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmtpdHp4MUBnbWFpbC5jb20iLCJwZXJtaXNzaW9ucyI6WyJjcmVhdGVfcnVicmlrIiwidmlld19ydWJyaWsiLCJ1cGRhdGVfcnVicmlrIiwiZGVsZXRlX3J1YnJpayIsImFzc2lnbl9ydWJyaWsiLCJ2aWV3X2xvYmVzIiwiY3JlYXRlX2N1c3RvbV9sb2JlIiwidmlld19jdXN0b21fbG9iZSIsInVwZGF0ZV9jdXN0b21fbG9iZSIsImRlbGV0ZV9jdXN0b21fbG9iZSIsInZpZXdfZGltZW5zaW9uX3F1ZXN0aW9ucyJdLCJ0b2tlblR5cGUiOiJhY2Nlc3MiLCJpc3MiOiJhbmtpdCIsImlhdCI6MTU1MjA0NTQ0NSwiZXhwIjoxNTUyMTMxODQ1fQ.cInkCr8r0PT4NUrE5ZtNoYSlZpMDWlW4Y1diFllOmA0XBBiozz-cWu-pZZhyK5BCl8NnTxYED-9KOE1ONGL1xw"
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmtpdHhAZ21haWwuY29tIiwicGVybWlzc2lvbnMiOlsiYXNzaWduX3J1YnJpayIsImNyZWF0ZV9ydWJyaWsiLCJnZW5lcmF0b3JfYW5hbHl0aWNzIl0sInRva2VuVHlwZSI6ImFjY2VzcyIsImlzcyI6ImFua2l0IiwiaWF0IjoxNTU0Mjk2OTU3LCJleHAiOjE1NTQzODMzNTd9.NuhhoyXT7KrO_N-RIVc3FRaUEs7Qgv0hfjtk24AKCsrLvOCPOWDTWMetFg6IspMkbDNO1j3OKs1EpBFhdoQyEQ"
 					}
 				],
 				"body": {
@@ -237,7 +247,7 @@
 						},
 						{
 							"key": "dimensionIds",
-							"value": "2,3,4",
+							"value": "1,2",
 							"description": "",
 							"type": "text"
 						}
@@ -254,6 +264,62 @@
 						"api",
 						"rubrik",
 						"create-rubrik"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "all rubriks for user",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmtpdHhAZ21haWwuY29tIiwicGVybWlzc2lvbnMiOlsiYXNzaWduX3J1YnJpayIsImNyZWF0ZV9ydWJyaWsiLCJnZW5lcmF0b3JfYW5hbHl0aWNzIl0sInRva2VuVHlwZSI6ImFjY2VzcyIsImlzcyI6ImFua2l0IiwiaWF0IjoxNTU0MzYwNDU3LCJleHAiOjE1NTQ0NDY4NTd9.yT3hjzTf6xc9REZPYR9Bjj1qCbABKF-auNVyogl0HjbRBOutOSVn4PwfmF7aF13ZPbUhNQbCt8zs6pcaUKQ81w"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/api/rubrik/all",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"rubrik",
+						"all"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "rubrik details",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmtpdHhAZ21haWwuY29tIiwicGVybWlzc2lvbnMiOlsiYXNzaWduX3J1YnJpayIsImNyZWF0ZV9ydWJyaWsiLCJnZW5lcmF0b3JfYW5hbHl0aWNzIl0sInRva2VuVHlwZSI6ImFjY2VzcyIsImlzcyI6ImFua2l0IiwiaWF0IjoxNTU0MzYwNDU3LCJleHAiOjE1NTQ0NDY4NTd9.yT3hjzTf6xc9REZPYR9Bjj1qCbABKF-auNVyogl0HjbRBOutOSVn4PwfmF7aF13ZPbUhNQbCt8zs6pcaUKQ81w"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/api/rubrik/13",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"rubrik",
+						"13"
 					]
 				},
 				"description": ""
