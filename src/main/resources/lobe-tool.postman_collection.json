@@ -233,7 +233,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmtpdHhAZ21haWwuY29tIiwicGVybWlzc2lvbnMiOlsiYXNzaWduX3J1YnJpayIsImNyZWF0ZV9ydWJyaWsiLCJnZW5lcmF0b3JfYW5hbHl0aWNzIl0sInRva2VuVHlwZSI6ImFjY2VzcyIsImlzcyI6ImFua2l0IiwiaWF0IjoxNTU0Mjk2OTU3LCJleHAiOjE1NTQzODMzNTd9.NuhhoyXT7KrO_N-RIVc3FRaUEs7Qgv0hfjtk24AKCsrLvOCPOWDTWMetFg6IspMkbDNO1j3OKs1EpBFhdoQyEQ"
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmtpdHhAZ21haWwuY29tIiwicGVybWlzc2lvbnMiOlsiYXNzaWduX3J1YnJpayIsImNyZWF0ZV9ydWJyaWsiLCJnZW5lcmF0b3JfYW5hbHl0aWNzIl0sInRva2VuVHlwZSI6ImFjY2VzcyIsImlzcyI6ImFua2l0IiwiaWF0IjoxNTU0NDU2NjIyLCJleHAiOjE1NTQ1NDMwMjJ9.noWEbljTwOB9Zf334Vn9gFE0x_kC964686eSGCfq6VzJ1a3ebjgrNay5DJB3BI-2QsxmFzgIH7SNahdrmAIzNw"
 					}
 				],
 				"body": {
@@ -247,7 +247,7 @@
 						},
 						{
 							"key": "dimensionIds",
-							"value": "1,2",
+							"value": "1,2,3,4",
 							"description": "",
 							"type": "text"
 						}
@@ -277,7 +277,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmtpdHhAZ21haWwuY29tIiwicGVybWlzc2lvbnMiOlsiYXNzaWduX3J1YnJpayIsImNyZWF0ZV9ydWJyaWsiLCJnZW5lcmF0b3JfYW5hbHl0aWNzIl0sInRva2VuVHlwZSI6ImFjY2VzcyIsImlzcyI6ImFua2l0IiwiaWF0IjoxNTU0MzYwNDU3LCJleHAiOjE1NTQ0NDY4NTd9.yT3hjzTf6xc9REZPYR9Bjj1qCbABKF-auNVyogl0HjbRBOutOSVn4PwfmF7aF13ZPbUhNQbCt8zs6pcaUKQ81w"
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmtpdHhAZ21haWwuY29tIiwicGVybWlzc2lvbnMiOlsiYXNzaWduX3J1YnJpayIsImNyZWF0ZV9ydWJyaWsiLCJnZW5lcmF0b3JfYW5hbHl0aWNzIl0sInRva2VuVHlwZSI6ImFjY2VzcyIsImlzcyI6ImFua2l0IiwiaWF0IjoxNTU0NDU2NjIyLCJleHAiOjE1NTQ1NDMwMjJ9.noWEbljTwOB9Zf334Vn9gFE0x_kC964686eSGCfq6VzJ1a3ebjgrNay5DJB3BI-2QsxmFzgIH7SNahdrmAIzNw"
 					}
 				],
 				"body": {},
@@ -305,12 +305,12 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmtpdHhAZ21haWwuY29tIiwicGVybWlzc2lvbnMiOlsiYXNzaWduX3J1YnJpayIsImNyZWF0ZV9ydWJyaWsiLCJnZW5lcmF0b3JfYW5hbHl0aWNzIl0sInRva2VuVHlwZSI6ImFjY2VzcyIsImlzcyI6ImFua2l0IiwiaWF0IjoxNTU0MzYwNDU3LCJleHAiOjE1NTQ0NDY4NTd9.yT3hjzTf6xc9REZPYR9Bjj1qCbABKF-auNVyogl0HjbRBOutOSVn4PwfmF7aF13ZPbUhNQbCt8zs6pcaUKQ81w"
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmtpdHhAZ21haWwuY29tIiwicGVybWlzc2lvbnMiOlsiYXNzaWduX3J1YnJpayIsImNyZWF0ZV9ydWJyaWsiLCJnZW5lcmF0b3JfYW5hbHl0aWNzIl0sInRva2VuVHlwZSI6ImFjY2VzcyIsImlzcyI6ImFua2l0IiwiaWF0IjoxNTU0NDU2NjIyLCJleHAiOjE1NTQ1NDMwMjJ9.noWEbljTwOB9Zf334Vn9gFE0x_kC964686eSGCfq6VzJ1a3ebjgrNay5DJB3BI-2QsxmFzgIH7SNahdrmAIzNw"
 					}
 				],
 				"body": {},
 				"url": {
-					"raw": "http://localhost:8080/api/rubrik/13",
+					"raw": "http://localhost:8080/api/rubrik/15",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -319,7 +319,98 @@
 					"path": [
 						"api",
 						"rubrik",
-						"13"
+						"15"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "get questions by dimension & rubrik type",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmtpdHhAZ21haWwuY29tIiwicGVybWlzc2lvbnMiOlsiYXNzaWduX3J1YnJpayIsImNyZWF0ZV9ydWJyaWsiLCJnZW5lcmF0b3JfYW5hbHl0aWNzIl0sInRva2VuVHlwZSI6ImFjY2VzcyIsImlzcyI6ImFua2l0IiwiaWF0IjoxNTU0NDU2NjIyLCJleHAiOjE1NTQ1NDMwMjJ9.noWEbljTwOB9Zf334Vn9gFE0x_kC964686eSGCfq6VzJ1a3ebjgrNay5DJB3BI-2QsxmFzgIH7SNahdrmAIzNw"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/api/rubrik/questions?dimensionId=1&rubrikTypeId=3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"rubrik",
+						"questions"
+					],
+					"query": [
+						{
+							"key": "dimensionId",
+							"value": "1",
+							"equals": true
+						},
+						{
+							"key": "rubrikTypeId",
+							"value": "3",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "rubrik update questions",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmtpdHhAZ21haWwuY29tIiwicGVybWlzc2lvbnMiOlsiYXNzaWduX3J1YnJpayIsImNyZWF0ZV9ydWJyaWsiLCJnZW5lcmF0b3JfYW5hbHl0aWNzIl0sInRva2VuVHlwZSI6ImFjY2VzcyIsImlzcyI6ImFua2l0IiwiaWF0IjoxNTU0NDU2NjIyLCJleHAiOjE1NTQ1NDMwMjJ9.noWEbljTwOB9Zf334Vn9gFE0x_kC964686eSGCfq6VzJ1a3ebjgrNay5DJB3BI-2QsxmFzgIH7SNahdrmAIzNw"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "remove",
+							"value": "16",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "add",
+							"value": "16,17,18,19",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "submit",
+							"value": "false",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/rubrik/15/update",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"rubrik",
+						"15",
+						"update"
 					]
 				},
 				"description": ""
