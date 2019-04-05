@@ -14,4 +14,6 @@ public interface RubrikService {
 	RubrikVo getRubrikDetails(String userId, Integer rubrikId);
 
 	DimensionVo getDimensionVo(Integer dimensionId, Integer rubrikTypeId);
+
+	RubrikVo updateQuestionsAndSubmit(Integer rubrikId, String userId, List<Integer> addQuestionIds, List<Integer> removeQuestionIds, Boolean submit);
 }

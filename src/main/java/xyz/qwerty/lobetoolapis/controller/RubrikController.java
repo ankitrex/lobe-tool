@@ -121,17 +121,54 @@ public class RubrikController {
 	public ResponseEntity<ResponseBuilder> getDimensionQuestions(@RequestHeader(name = "Authorization") String authorization, @RequestParam("dimensionId") Integer dimensionId,
 			@RequestParam("rubrikTypeId") Integer rubrikTypeId) {
 
+		ResponseBuilder responseBuilder = new ResponseBuilder();
+
 		String accessToken = authUserService.getAccessTokenFromHeader(authorization);
 		String permission = "create_rubrik";
 
-		authUserService.checkUserAccess(accessToken, permission);
+		Boolean hasPermission = authUserService.checkUserAccess(accessToken, permission);
 
-		DimensionVo dimensionVo = rubrikService.getDimensionVo(dimensionId, rubrikTypeId);
+		if (hasPermission) {
+
+			DimensionVo dimensionVo = rubrikService.getDimensionVo(dimensionId, rubrikTypeId);
+			responseBuilder.setCode(HttpStatus.OK.value());
+			responseBuilder.setStatus(HttpStatus.OK.getReasonPhrase());
+			responseBuilder.setData(dimensionVo);
+		}
+		else {
+			responseBuilder.setCode(HttpStatus.UNAUTHORIZED.value());
+			responseBuilder.setStatus(HttpStatus.UNAUTHORIZED.getReasonPhrase());
+		}
+
+		return new ResponseEntity<>(responseBuilder, HttpStatus.OK);
+	}
+
+	@PostMapping("/{rubrikId}/update")
+	public ResponseEntity<ResponseBuilder> getDimensionQuestions(@RequestHeader(name = "Authorization") String authorization, @PathVariable(name = "rubrikId") Integer rubrikId,
+			@RequestParam(name = "add") List<Integer> addQuestionIds, @RequestParam(name = "remove") List<Integer> removeQuestionIds,
+			@RequestParam(name = "submit") Boolean submit) {
 
 		ResponseBuilder responseBuilder = new ResponseBuilder();
-		responseBuilder.setCode(HttpStatus.OK.value());
-		responseBuilder.setStatus(HttpStatus.OK.getReasonPhrase());
-		responseBuilder.setData(dimensionVo);
+
+		String accessToken = authUserService.getAccessTokenFromHeader(authorization);
+		String permission = "create_rubrik";
+
+		Boolean hasPermission = authUserService.checkUserAccess(accessToken, permission);
+
+		if (hasPermission) {
+
+			String userId = authUserService.getUserId(accessToken);
+
+			RubrikVo rubrikVo = rubrikService.updateQuestionsAndSubmit(rubrikId, userId, addQuestionIds, removeQuestionIds, submit);
+
+			responseBuilder.setData(rubrikVo);
+			responseBuilder.setCode(HttpStatus.OK.value());
+			responseBuilder.setStatus(HttpStatus.OK.getReasonPhrase());
+		}
+		else {
+			responseBuilder.setCode(HttpStatus.UNAUTHORIZED.value());
+			responseBuilder.setStatus(HttpStatus.UNAUTHORIZED.getReasonPhrase());
+		}
 
 		return new ResponseEntity<>(responseBuilder, HttpStatus.OK);
 	}

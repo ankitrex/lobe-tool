@@ -32,6 +32,7 @@ import xyz.qwerty.lobetoolapis.repository.RubrikRepository;
 import xyz.qwerty.lobetoolapis.repository.RubrikTypeMasterRepository;
 import xyz.qwerty.lobetoolapis.repository.UserRepository;
 import xyz.qwerty.lobetoolapis.service.RubrikService;
+import xyz.qwerty.lobetoolapis.util.Constants;
 import xyz.qwerty.lobetoolapis.vo.DimensionVo;
 import xyz.qwerty.lobetoolapis.vo.QuestionVo;
 import xyz.qwerty.lobetoolapis.vo.RubrikVo;
@@ -62,6 +63,12 @@ public class RubrikServiceImpl implements RubrikService {
 
 	@Value("${custom.rubrik.id}")
 	private Integer						customRubrikId;
+
+	@Value("${premium.rubrik.id}")
+	private Integer						premiumRubrikId;
+
+	@Value("${optional.question.id}")
+	private Integer						optionalQuestionId;
 
 	@Override
 	public RubrikVo createRubrik(String userId, Integer rubrikTypeId, String dimensionIds) {
@@ -106,7 +113,7 @@ public class RubrikServiceImpl implements RubrikService {
 		Rubrik rubrik = new Rubrik();
 		rubrik.setUser(user);
 		rubrik.setRubrikTypeMaster(rubrikTypeMaster);
-		rubrik.setStatus("incomplete");
+		rubrik.setStatus(Constants.STATUS_INCOMPLETE);
 		rubrik.setCreatedTs(LocalDateTime.now());
 
 		rubrik = rubrikRepository.save(rubrik);
@@ -139,7 +146,7 @@ public class RubrikServiceImpl implements RubrikService {
 		// add questions to the rubrik-questions mapping table
 		if (!customRubrikId.equals(rubrikTypeMaster.getId())) {
 
-			List<RubrikQuestions> rubrikQuestions = rubrikTypeMaster.getQuestionMaster().stream().filter(qm -> !qm.isOptional()).map(qm -> {
+			List<RubrikQuestions> rubrikQuestions = rubrikTypeMaster.getQuestionMaster().stream().filter(qm -> qm.getId() != optionalQuestionId).map(qm -> {
 
 				RubrikQuestions rubrikQuestion = new RubrikQuestions();
 
@@ -195,12 +202,89 @@ public class RubrikServiceImpl implements RubrikService {
 		DimensionVo dimensionVo = new DimensionVo();
 		dimensionVo.setId(dimensionId);
 
+		if (customRubrikId.equals(rubrikTypeId)) {
+			rubrikTypeId = premiumRubrikId;
+		}
+
 		List<QuestionMaster> questions = questionMasterRepository.findByQualityDimensionMasterIdAndRubrikTypeMasterId(dimensionId, rubrikTypeId);
 
 		List<QuestionVo> questionVoList = questions.stream().map(q -> getQuestionVo(q)).collect(Collectors.toList());
 		dimensionVo.setQuestions(questionVoList);
 
 		return dimensionVo;
+	}
+
+	@Override
+	public RubrikVo updateQuestionsAndSubmit(Integer rubrikId, String userId, List<Integer> addQuestionIds, List<Integer> removeQuestionIds, Boolean submit) {
+
+		Optional<Rubrik> result = rubrikRepository.findById(rubrikId);
+		if (result.isPresent()) {
+
+			Rubrik rubrik = result.get();
+			if (!userId.equals(rubrik.getUser().getEmail())) {
+				throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Rubrik doesn't belong to this user");
+			}
+			if (Constants.STATUS_COMPLETE.equals(rubrik.getStatus())) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Rubrik already completed");
+			}
+
+			if (!premiumRubrikId.equals(rubrik.getRubrikTypeMaster().getId())) {
+
+				if (customRubrikId.equals(rubrik.getRubrikTypeMaster().getId())) {
+
+					List<RubrikQuestions> addQuestions = getRubrikQuestionsMapping(rubrik, addQuestionIds);
+					rubrikQuestionsRepository.saveAll(addQuestions);
+
+					removeQuestionIds.forEach(id -> {
+						rubrikQuestionsRepository.deleteByRubrikQuestionsKeyQuestionMasterIdAndRubrikQuestionsKeyRubrikId(id, rubrik.getId());
+					});
+				}
+				else {
+					if (addQuestionIds.contains(optionalQuestionId)) {
+
+						List<RubrikQuestions> addQuestions = getRubrikQuestionsMapping(rubrik, Arrays.asList(optionalQuestionId));
+
+						rubrikQuestionsRepository.saveAll(addQuestions);
+					}
+					else if (removeQuestionIds.contains(optionalQuestionId)) {
+
+						rubrikQuestionsRepository.deleteByRubrikQuestionsKeyQuestionMasterIdAndRubrikQuestionsKeyRubrikId(optionalQuestionId, rubrik.getId());
+					}
+				}
+			}
+
+			if (submit) {
+				rubrik.setStatus(Constants.STATUS_COMPLETE);
+				rubrikRepository.save(rubrik);
+			}
+
+			return getRubrikVo(rubrik);
+		}
+
+		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid rubrik id");
+	}
+
+	private List<RubrikQuestions> getRubrikQuestionsMapping(Rubrik rubrik, List<Integer> questionIds) {
+
+		List<RubrikQuestions> rubrikQuestions = new ArrayList<>();
+
+		questionIds.forEach(id -> {
+
+			QuestionMaster questionMaster = new QuestionMaster();
+			questionMaster.setId(id);
+
+			RubrikQuestions rubrikQuestion = new RubrikQuestions();
+
+			RubrikQuestionsKey rubrikQuestionKey = new RubrikQuestionsKey();
+			rubrikQuestionKey.setQuestionMaster(questionMaster);
+			rubrikQuestionKey.setRubrik(rubrik);
+
+			rubrikQuestion.setRubrikQuestionsKey(rubrikQuestionKey);
+
+			rubrikQuestions.add(rubrikQuestion);
+		});
+
+		return rubrikQuestions;
 	}
 
 	private RubrikVo getRubrikVo(Rubrik rubrik) {
