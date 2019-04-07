@@ -274,7 +274,7 @@ public class LobeServiceImpl implements LobeService {
 	}
 
 	@Override
-	public LearningObjectVo updateLobeScores(String userId, String json, Boolean submit) {
+	public LearningObjectVo updateLobeScores(String userId, String code, String json, Boolean submit) {
 		
 		Optional<LearningObject> learningObject = learningObjectRepository.findById(code);
 		if (learningObject.isPresent()) {
