@@ -30,22 +30,25 @@ public class LearningObject implements Serializable {
 	@Column(nullable = false, length = 100)
 	private String				name;
 
-	@Column(nullable = false, length = 100)
+	@Column(nullable = true, length = 100)
 	private String				grade;
 
-	@Column(nullable = false, length = 100)
+	@Column(nullable = true, length = 100)
 	private String				subject;
 
-	@Column(nullable = false, length = 100)
+	@Column(nullable = true, length = 100)
 	private String				chapter;
 
-	@Column(name = "repository_name", nullable = false, length = 100)
+	@Column(name = "repository_name", nullable = true, length = 100)
 	private String				repositoryName;
+	
+	@Column(name = "module_name", nullable = true, length = 100)
+	private String				moduleName;
 
 	@Column(name = "created_ts", nullable = false)
 	private LocalDateTime		createdTs;
 
-	@Column(name = "updated_ts", nullable = false)
+	@Column(name = "updated_ts", nullable = true)
 	private LocalDateTime		updatedTs;
 
 	@Column(nullable = false, length = 20)

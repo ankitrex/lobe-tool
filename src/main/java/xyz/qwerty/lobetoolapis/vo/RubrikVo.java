@@ -19,6 +19,8 @@ public class RubrikVo {
 	private LocalDateTime		updatedTs;
 
 	private String				rubrikType;
+	
+	private Integer 			rubrikTypeId;
 
 	private List<DimensionVo>	dimensions;
 }

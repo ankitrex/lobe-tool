@@ -1,6 +1,7 @@
 package xyz.qwerty.lobetoolapis.service.impl;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -78,6 +79,7 @@ public class UserServiceImpl implements UserService {
 			userVo.setName(u.getName());
 			userVo.setAffiliation(u.getAffiliation());
 			userVo.setStatus(u.getStatus());
+			userVo.setRoles(u.getUserRole().stream().map(r -> r.getUserRoleKey().getRole().getName()).collect(Collectors.toList()));
 			return userVo;
 		}
 		else {

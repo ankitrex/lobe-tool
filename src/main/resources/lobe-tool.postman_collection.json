@@ -1,8 +1,7 @@
 {
 	"info": {
+		"_postman_id": "e5bd29a4-bdaf-4470-a2c0-b83328074829",
 		"name": "lobe-tool",
-		"_postman_id": "dddc0cc6-f06a-f74c-e063-6477b4f8d03d",
-		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -11,7 +10,10 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
 					"raw": "localhost:8080/open/get-roles",
 					"host": [
@@ -22,8 +24,7 @@
 						"open",
 						"get-roles"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -38,31 +39,26 @@
 						{
 							"key": "email",
 							"value": "ankitx@gmail.com",
-							"description": "",
 							"type": "text"
 						},
 						{
 							"key": "name",
 							"value": "ankit",
-							"description": "",
 							"type": "text"
 						},
 						{
 							"key": "password",
 							"value": "qwerty",
-							"description": "",
 							"type": "text"
 						},
 						{
 							"key": "affiliation",
 							"value": "xaviers",
-							"description": "",
 							"type": "text"
 						},
 						{
 							"key": "roleId",
 							"value": "3",
-							"description": "",
 							"type": "text"
 						}
 					]
@@ -79,19 +75,33 @@
 						"user",
 						"register"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
 		{
 			"name": "login",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {},
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "ankitx@gmail.com"
+						},
+						{
+							"key": "password",
+							"value": "qwerty"
+						}
+					]
+				},
 				"url": {
-					"raw": "http://localhost:8080/api/user/login?email=ankitx@gmail.com&password=qwerty",
+					"raw": "http://localhost:8080/api/user/login",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -101,21 +111,8 @@
 						"api",
 						"user",
 						"login"
-					],
-					"query": [
-						{
-							"key": "email",
-							"value": "ankitx@gmail.com",
-							"equals": true
-						},
-						{
-							"key": "password",
-							"value": "qwerty",
-							"equals": true
-						}
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -129,7 +126,10 @@
 						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmtpdHhAZ21haWwuY29tIiwicGVybWlzc2lvbnMiOlsiYXNzaWduX3J1YnJpayIsImNyZWF0ZV9ydWJyaWsiLCJnZW5lcmF0b3JfYW5hbHl0aWNzIl0sInRva2VuVHlwZSI6InJlZnJlc2giLCJpc3MiOiJhbmtpdCIsImlhdCI6MTU1Mzg2MTAxNywiZXhwIjoxNTU1MDcwNjE3fQ.tRNpfD_xOYyDxRxSuENgZmaK0e-3REINSnRogqe8e_5rf6Om_-4ht_QD3to5odchqV-LUhlQXTl9Yf-y7w6INQ"
 					}
 				],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
 					"raw": "localhost:8080/api/user/token-refresh",
 					"host": [
@@ -141,8 +141,7 @@
 						"user",
 						"token-refresh"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -156,7 +155,10 @@
 						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmtpdHhAZ21haWwuY29tIiwicGVybWlzc2lvbnMiOlsiYXNzaWduX3J1YnJpayIsImNyZWF0ZV9ydWJyaWsiLCJnZW5lcmF0b3JfYW5hbHl0aWNzIl0sInRva2VuVHlwZSI6ImFjY2VzcyIsImlzcyI6ImFua2l0IiwiaWF0IjoxNTU0Mjk2OTU3LCJleHAiOjE1NTQzODMzNTd9.NuhhoyXT7KrO_N-RIVc3FRaUEs7Qgv0hfjtk24AKCsrLvOCPOWDTWMetFg6IspMkbDNO1j3OKs1EpBFhdoQyEQ"
 					}
 				],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
 					"raw": "localhost:8080/api/user/profile",
 					"host": [
@@ -168,8 +170,7 @@
 						"user",
 						"profile"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -180,12 +181,15 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmtpdHhAZ21haWwuY29tIiwicGVybWlzc2lvbnMiOlsiYXNzaWduX3J1YnJpayIsImNyZWF0ZV9ydWJyaWsiLCJnZW5lcmF0b3JfYW5hbHl0aWNzIl0sInRva2VuVHlwZSI6ImFjY2VzcyIsImlzcyI6ImFua2l0IiwiaWF0IjoxNTU0MzYwNDU3LCJleHAiOjE1NTQ0NDY4NTd9.yT3hjzTf6xc9REZPYR9Bjj1qCbABKF-auNVyogl0HjbRBOutOSVn4PwfmF7aF13ZPbUhNQbCt8zs6pcaUKQ81w"
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmtpdHhAZ21haWwuY29tIiwicGVybWlzc2lvbnMiOlsiYXNzaWduX3J1YnJpayIsImdlbmVyYXRvcl9hbmFseXRpY3MiLCJjcmVhdGVfcnVicmlrIl0sInRva2VuVHlwZSI6ImFjY2VzcyIsImlzcyI6ImFua2l0IiwiaWF0IjoxNTU0NjE4ODQ0LCJleHAiOjE1NTQ3MDUyNDR9.gaiVsgp6fZMb5Rgde0WTSjMsmCAlhZ9VCp-zTwFK7A38FRM__ciwk1ZpTj85HVXQB78svV0WE1YM17O2_e9ypg"
 					}
 				],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
-					"raw": "http://localhost:8080/api/get-rubrik-types",
+					"raw": "http://localhost:8080/api/lobe/get-rubrik-types",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -193,10 +197,10 @@
 					"port": "8080",
 					"path": [
 						"api",
+						"lobe",
 						"get-rubrik-types"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -207,22 +211,25 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmtpdHhAZ21haWwuY29tIiwicGVybWlzc2lvbnMiOlsiYXNzaWduX3J1YnJpayIsImNyZWF0ZV9ydWJyaWsiLCJnZW5lcmF0b3JfYW5hbHl0aWNzIl0sInRva2VuVHlwZSI6ImFjY2VzcyIsImlzcyI6ImFua2l0IiwiaWF0IjoxNTU0MzYwNDU3LCJleHAiOjE1NTQ0NDY4NTd9.yT3hjzTf6xc9REZPYR9Bjj1qCbABKF-auNVyogl0HjbRBOutOSVn4PwfmF7aF13ZPbUhNQbCt8zs6pcaUKQ81w"
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmtpdHhAZ21haWwuY29tIiwicGVybWlzc2lvbnMiOlsiYXNzaWduX3J1YnJpayIsImdlbmVyYXRvcl9hbmFseXRpY3MiLCJjcmVhdGVfcnVicmlrIl0sInRva2VuVHlwZSI6ImFjY2VzcyIsImlzcyI6ImFua2l0IiwiaWF0IjoxNTU0NjE4ODQ0LCJleHAiOjE1NTQ3MDUyNDR9.gaiVsgp6fZMb5Rgde0WTSjMsmCAlhZ9VCp-zTwFK7A38FRM__ciwk1ZpTj85HVXQB78svV0WE1YM17O2_e9ypg"
 					}
 				],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
-					"raw": "localhost:8080/api/get-dimensions",
+					"raw": "localhost:8080/api/lobe/get-dimensions",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"api",
+						"lobe",
 						"get-dimensions"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -242,13 +249,11 @@
 						{
 							"key": "rubrikTypeId",
 							"value": "3",
-							"description": "",
 							"type": "text"
 						},
 						{
 							"key": "dimensionIds",
 							"value": "1,2,3,4",
-							"description": "",
 							"type": "text"
 						}
 					]
@@ -265,8 +270,7 @@
 						"rubrik",
 						"create-rubrik"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -280,7 +284,10 @@
 						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmtpdHhAZ21haWwuY29tIiwicGVybWlzc2lvbnMiOlsiYXNzaWduX3J1YnJpayIsImNyZWF0ZV9ydWJyaWsiLCJnZW5lcmF0b3JfYW5hbHl0aWNzIl0sInRva2VuVHlwZSI6ImFjY2VzcyIsImlzcyI6ImFua2l0IiwiaWF0IjoxNTU0NDU2NjIyLCJleHAiOjE1NTQ1NDMwMjJ9.noWEbljTwOB9Zf334Vn9gFE0x_kC964686eSGCfq6VzJ1a3ebjgrNay5DJB3BI-2QsxmFzgIH7SNahdrmAIzNw"
 					}
 				],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
 					"raw": "http://localhost:8080/api/rubrik/all",
 					"protocol": "http",
@@ -293,8 +300,7 @@
 						"rubrik",
 						"all"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -308,7 +314,10 @@
 						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmtpdHhAZ21haWwuY29tIiwicGVybWlzc2lvbnMiOlsiYXNzaWduX3J1YnJpayIsImNyZWF0ZV9ydWJyaWsiLCJnZW5lcmF0b3JfYW5hbHl0aWNzIl0sInRva2VuVHlwZSI6ImFjY2VzcyIsImlzcyI6ImFua2l0IiwiaWF0IjoxNTU0NDU2NjIyLCJleHAiOjE1NTQ1NDMwMjJ9.noWEbljTwOB9Zf334Vn9gFE0x_kC964686eSGCfq6VzJ1a3ebjgrNay5DJB3BI-2QsxmFzgIH7SNahdrmAIzNw"
 					}
 				],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
 					"raw": "http://localhost:8080/api/rubrik/15",
 					"protocol": "http",
@@ -321,8 +330,7 @@
 						"rubrik",
 						"15"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -336,7 +344,10 @@
 						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmtpdHhAZ21haWwuY29tIiwicGVybWlzc2lvbnMiOlsiYXNzaWduX3J1YnJpayIsImNyZWF0ZV9ydWJyaWsiLCJnZW5lcmF0b3JfYW5hbHl0aWNzIl0sInRva2VuVHlwZSI6ImFjY2VzcyIsImlzcyI6ImFua2l0IiwiaWF0IjoxNTU0NDU2NjIyLCJleHAiOjE1NTQ1NDMwMjJ9.noWEbljTwOB9Zf334Vn9gFE0x_kC964686eSGCfq6VzJ1a3ebjgrNay5DJB3BI-2QsxmFzgIH7SNahdrmAIzNw"
 					}
 				],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
 					"raw": "http://localhost:8080/api/rubrik/questions?dimensionId=1&rubrikTypeId=3",
 					"protocol": "http",
@@ -352,17 +363,14 @@
 					"query": [
 						{
 							"key": "dimensionId",
-							"value": "1",
-							"equals": true
+							"value": "1"
 						},
 						{
 							"key": "rubrikTypeId",
-							"value": "3",
-							"equals": true
+							"value": "3"
 						}
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -382,19 +390,16 @@
 						{
 							"key": "remove",
 							"value": "16",
-							"description": "",
 							"type": "text"
 						},
 						{
 							"key": "add",
 							"value": "16,17,18,19",
-							"description": "",
 							"type": "text"
 						},
 						{
 							"key": "submit",
 							"value": "false",
-							"description": "",
 							"type": "text"
 						}
 					]
@@ -412,8 +417,184 @@
 						"15",
 						"update"
 					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "assign learning object",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmtpdHhAZ21haWwuY29tIiwicGVybWlzc2lvbnMiOlsiYXNzaWduX3J1YnJpayIsImdlbmVyYXRvcl9hbmFseXRpY3MiLCJjcmVhdGVfcnVicmlrIl0sInRva2VuVHlwZSI6ImFjY2VzcyIsImlzcyI6ImFua2l0IiwiaWF0IjoxNTU0NjE4ODQ0LCJleHAiOjE1NTQ3MDUyNDR9.gaiVsgp6fZMb5Rgde0WTSjMsmCAlhZ9VCp-zTwFK7A38FRM__ciwk1ZpTj85HVXQB78svV0WE1YM17O2_e9ypg",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "rubrikId",
+							"value": "14",
+							"type": "text"
+						},
+						{
+							"key": "rubrikCode",
+							"value": "LOBE_CUSTOM_15_TEST",
+							"type": "text"
+						},
+						{
+							"key": "msgSubject",
+							"value": "mail subject",
+							"type": "text"
+						},
+						{
+							"key": "msgBody",
+							"value": "mail body bla bla bla",
+							"type": "text"
+						},
+						{
+							"key": "learningObjectName",
+							"value": "TEST",
+							"type": "text"
+						},
+						{
+							"key": "evaluatorEmail",
+							"value": "ankiteval@gmail.com",
+							"type": "text"
+						}
+					]
 				},
-				"description": ""
+				"url": {
+					"raw": "http://localhost:8080/api/lobe/assign",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"lobe",
+						"assign"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "all evaluations",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0aGVhbmtpdGdhanJhQGdtYWlsLmNvbSIsInBlcm1pc3Npb25zIjpbImV2YWx1YXRlX3J1YnJpayIsImV2YWx1YXRvcl9hbmFseXRpY3MiXSwidG9rZW5UeXBlIjoiYWNjZXNzIiwiaXNzIjoiYW5raXQiLCJpYXQiOjE1NTQ2NDA1MDMsImV4cCI6MTU1NDcyNjkwM30.X22dJhwBGgzhKPJL8NlMo8khLCisg-Zm25cEhZZEC4pgGBkTLLoy2l5M_ixTgHhDLECnXIICl9ByVn_r0EaCig",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "type",
+							"value": "evaluator",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/lobe/evaluations/all",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"lobe",
+						"evaluations",
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "new review",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmtpdHhAZ21haWwuY29tIiwicGVybWlzc2lvbnMiOlsiYXNzaWduX3J1YnJpayIsImdlbmVyYXRvcl9hbmFseXRpY3MiLCJjcmVhdGVfcnVicmlrIl0sInRva2VuVHlwZSI6ImFjY2VzcyIsImlzcyI6ImFua2l0IiwiaWF0IjoxNTU0NjE4ODQ0LCJleHAiOjE1NTQ3MDUyNDR9.gaiVsgp6fZMb5Rgde0WTSjMsmCAlhZ9VCp-zTwFK7A38FRM__ciwk1ZpTj85HVXQB78svV0WE1YM17O2_e9ypg",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "code",
+							"value": "LOBE_CUSTOM_16_TESTX-9b525e38-150c-410f-bf1a-d6cb0167f76c",
+							"type": "text"
+						},
+						{
+							"key": "grade",
+							"value": "A",
+							"type": "text"
+						},
+						{
+							"key": "subject",
+							"value": "Chemistry",
+							"type": "text"
+						},
+						{
+							"key": "chapter",
+							"value": "organic",
+							"type": "text"
+						},
+						{
+							"key": "moduleName",
+							"value": "my mod",
+							"type": "text"
+						},
+						{
+							"key": "repositoryName",
+							"value": "qwerty",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/lobe/new-review",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"lobe",
+						"new-review"
+					]
+				}
 			},
 			"response": []
 		}

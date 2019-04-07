@@ -7,4 +7,7 @@ public class Constants {
 
 	public static final String	STATUS_INCOMPLETE	= "incomplete";
 	public static final String	STATUS_COMPLETE		= "complete";
+	public static final String STATUS_ASSIGNED 		= "assigned";
+	public static final Object TYPE_GENERATOR 		= "generator";
+	public static final Object TYPE_EVALUATOR 		= "evaluator";
 }

@@ -1,5 +1,7 @@
 package xyz.qwerty.lobetoolapis.vo;
 
+import java.util.List;
+
 import lombok.Data;
 
 @Data
@@ -12,4 +14,6 @@ public class UserVo {
 	private String	affiliation;
 
 	private String	status;
+	
+	private List<String> 	roles;
 }

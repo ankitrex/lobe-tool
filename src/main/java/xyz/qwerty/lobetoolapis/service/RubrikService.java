@@ -3,6 +3,7 @@ package xyz.qwerty.lobetoolapis.service;
 import java.util.List;
 
 import xyz.qwerty.lobetoolapis.vo.DimensionVo;
+import xyz.qwerty.lobetoolapis.vo.LearningObjectVo;
 import xyz.qwerty.lobetoolapis.vo.RubrikVo;
 
 public interface RubrikService {

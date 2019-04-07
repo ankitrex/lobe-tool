@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
 
+import xyz.qwerty.lobetoolapis.entity.LearningObject;
 import xyz.qwerty.lobetoolapis.entity.QualityDimensionMaster;
 import xyz.qwerty.lobetoolapis.entity.QuestionMaster;
 import xyz.qwerty.lobetoolapis.entity.Rubrik;
@@ -34,6 +35,7 @@ import xyz.qwerty.lobetoolapis.repository.UserRepository;
 import xyz.qwerty.lobetoolapis.service.RubrikService;
 import xyz.qwerty.lobetoolapis.util.Constants;
 import xyz.qwerty.lobetoolapis.vo.DimensionVo;
+import xyz.qwerty.lobetoolapis.vo.LearningObjectVo;
 import xyz.qwerty.lobetoolapis.vo.QuestionVo;
 import xyz.qwerty.lobetoolapis.vo.RubrikVo;
 
@@ -257,6 +259,9 @@ public class RubrikServiceImpl implements RubrikService {
 				rubrik.setStatus(Constants.STATUS_COMPLETE);
 				rubrikRepository.save(rubrik);
 			}
+			
+			rubrik.setUpdatedTs(LocalDateTime.now());
+			rubrikRepository.save(rubrik);
 
 			return getRubrikVo(rubrik);
 		}
@@ -294,6 +299,7 @@ public class RubrikServiceImpl implements RubrikService {
 		rubrikVo.setName(rubrik.getName());
 		rubrikVo.setStatus(rubrik.getStatus());
 		rubrikVo.setRubrikType(rubrik.getRubrikTypeMaster().getName());
+		rubrikVo.setRubrikTypeId(rubrik.getRubrikTypeMaster().getId());
 		rubrikVo.setCreatedTs(rubrik.getCreatedTs());
 		rubrikVo.setUpdatedTs(rubrik.getUpdatedTs());
 
@@ -358,4 +364,5 @@ public class RubrikServiceImpl implements RubrikService {
 
 		return questionVo;
 	}
+
 }
