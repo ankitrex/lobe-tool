@@ -1,15 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.5
+-- version 4.6.5.2
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Apr 07, 2019 at 03:47 PM
--- Server version: 10.1.38-MariaDB
--- PHP Version: 7.3.2
+-- Host: localhost
+-- Generation Time: Apr 09, 2019 at 02:55 PM
+-- Server version: 10.1.21-MariaDB
+-- PHP Version: 5.6.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
-START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -51,7 +49,9 @@ CREATE TABLE `learning_object` (
 INSERT INTO `learning_object` (`code`, `chapter`, `created_ts`, `grade`, `name`, `repository_name`, `status`, `subject`, `module_name`, `updated_ts`, `rubrik_id`, `assigned_by`, `assigned_to`) VALUES
 ('LOBE_CUSTOM_15_TEST-1500af92-bde8-4b9d-9267-54b4415b3fe5', NULL, '2019-04-07 13:59:57.000000', NULL, 'TEST', NULL, 'assigned', NULL, NULL, NULL, 14, 'ankitx@gmail.com', 'ankiteval@gmail.com'),
 ('LOBE_CUSTOM_16_TEST-d35207ac-fa2b-4a82-9069-9a74f3b79ac7', NULL, '2019-04-07 13:47:34.000000', NULL, 'TEST', NULL, 'assigned', NULL, NULL, NULL, 16, 'ankitx@gmail.com', 'ankiteval@gmail.com'),
-('LOBE_CUSTOM_16_TESTX-9b525e38-150c-410f-bf1a-d6cb0167f76c', 'organic', '2019-04-07 16:14:58.000000', 'A', 'TESTX', 'qwerty', 'incomplete', 'Chemistry', 'my mod', '2019-04-07 18:10:28.000000', 16, 'ankitx@gmail.com', 'theankitgajra@gmail.com');
+('LOBE_CUSTOM_16_TESTX-9b525e38-150c-410f-bf1a-d6cb0167f76c', 'organic', '2019-04-07 16:14:58.000000', 'A', 'TESTX', 'qwerty', 'complete', 'Chemistry', 'my mod', '2019-04-07 18:10:28.000000', 16, 'ankitx@gmail.com', 'theankitgajra@gmail.com'),
+('LOBE_CUSTOM_17_TECH-5f07a799-9274-49b5-aa8b-8c8dcccb0e98', 'database', '2019-04-09 17:51:45.000000', 'A', 'TECH', 'qwerty', 'complete', 'IT', 'my mod', '2019-04-09 17:55:34.000000', 17, 'ankitx@gmail.com', 'theankitgajra@gmail.com'),
+('LOBE_CUSTOM_17_TECH2', 'ds', '2019-04-09 18:05:29.000000', 'A', 'TECH2', 'qwerty', 'complete', 'IT', 'my mod', '2019-04-09 18:06:39.000000', 17, 'ankitx@gmail.com', 'theankitgajra@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -64,6 +64,43 @@ CREATE TABLE `lobe_scores` (
   `question_id` int(11) NOT NULL,
   `learning_object_id` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `lobe_scores`
+--
+
+INSERT INTO `lobe_scores` (`score`, `question_id`, `learning_object_id`) VALUES
+(3, 16, 'LOBE_CUSTOM_17_TECH-5f07a799-9274-49b5-aa8b-8c8dcccb0e98'),
+(3, 16, 'LOBE_CUSTOM_17_TECH2'),
+(0, 17, 'LOBE_CUSTOM_16_TESTX-9b525e38-150c-410f-bf1a-d6cb0167f76c'),
+(1, 17, 'LOBE_CUSTOM_17_TECH-5f07a799-9274-49b5-aa8b-8c8dcccb0e98'),
+(1, 17, 'LOBE_CUSTOM_17_TECH2'),
+(1, 18, 'LOBE_CUSTOM_16_TESTX-9b525e38-150c-410f-bf1a-d6cb0167f76c'),
+(0, 18, 'LOBE_CUSTOM_17_TECH-5f07a799-9274-49b5-aa8b-8c8dcccb0e98'),
+(0, 18, 'LOBE_CUSTOM_17_TECH2'),
+(0, 19, 'LOBE_CUSTOM_16_TESTX-9b525e38-150c-410f-bf1a-d6cb0167f76c'),
+(2, 19, 'LOBE_CUSTOM_17_TECH-5f07a799-9274-49b5-aa8b-8c8dcccb0e98'),
+(2, 19, 'LOBE_CUSTOM_17_TECH2'),
+(1, 20, 'LOBE_CUSTOM_17_TECH-5f07a799-9274-49b5-aa8b-8c8dcccb0e98'),
+(1, 20, 'LOBE_CUSTOM_17_TECH2'),
+(3, 21, 'LOBE_CUSTOM_17_TECH-5f07a799-9274-49b5-aa8b-8c8dcccb0e98'),
+(3, 21, 'LOBE_CUSTOM_17_TECH2'),
+(1, 26, 'LOBE_CUSTOM_17_TECH-5f07a799-9274-49b5-aa8b-8c8dcccb0e98'),
+(1, 26, 'LOBE_CUSTOM_17_TECH2'),
+(0, 29, 'LOBE_CUSTOM_17_TECH-5f07a799-9274-49b5-aa8b-8c8dcccb0e98'),
+(0, 29, 'LOBE_CUSTOM_17_TECH2'),
+(2, 30, 'LOBE_CUSTOM_17_TECH-5f07a799-9274-49b5-aa8b-8c8dcccb0e98'),
+(2, 30, 'LOBE_CUSTOM_17_TECH2'),
+(1, 31, 'LOBE_CUSTOM_17_TECH-5f07a799-9274-49b5-aa8b-8c8dcccb0e98'),
+(1, 31, 'LOBE_CUSTOM_17_TECH2'),
+(0, 32, 'LOBE_CUSTOM_17_TECH-5f07a799-9274-49b5-aa8b-8c8dcccb0e98'),
+(0, 32, 'LOBE_CUSTOM_17_TECH2'),
+(2, 34, 'LOBE_CUSTOM_17_TECH-5f07a799-9274-49b5-aa8b-8c8dcccb0e98'),
+(2, 34, 'LOBE_CUSTOM_17_TECH2'),
+(2, 35, 'LOBE_CUSTOM_17_TECH-5f07a799-9274-49b5-aa8b-8c8dcccb0e98'),
+(2, 35, 'LOBE_CUSTOM_17_TECH2'),
+(1, 36, 'LOBE_CUSTOM_17_TECH-5f07a799-9274-49b5-aa8b-8c8dcccb0e98'),
+(2, 36, 'LOBE_CUSTOM_17_TECH2');
 
 -- --------------------------------------------------------
 
@@ -242,7 +279,8 @@ INSERT INTO `rubrik` (`id`, `created_ts`, `name`, `status`, `type`, `updated_ts`
 (13, '2019-04-04 16:28:39.000000', 'LOBE_CUSTOM_13', 'complete', 3, '2019-04-04 16:28:39.000000', 'ankitx@gmail.com'),
 (14, '2019-04-05 18:45:34.000000', 'LOBE_PREMIUM_14', 'complete', 2, '2019-04-05 18:45:34.000000', 'ankitx@gmail.com'),
 (15, '2019-04-05 18:56:04.000000', 'LOBE_CUSTOM_15', 'incomplete', 3, '2019-04-05 18:56:04.000000', 'ankitx@gmail.com'),
-(16, '2019-04-07 12:06:09.000000', 'LOBE_CUSTOM_16', 'complete', 3, '2019-04-07 12:06:10.000000', 'ankitx@gmail.com');
+(16, '2019-04-07 12:06:09.000000', 'LOBE_CUSTOM_16', 'complete', 3, '2019-04-07 12:06:10.000000', 'ankitx@gmail.com'),
+(17, '2019-04-09 17:40:38.000000', 'LOBE_CUSTOM_17', 'complete', 3, '2019-04-09 17:50:37.000000', 'ankitx@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -281,7 +319,11 @@ INSERT INTO `rubrik_quality_dimensions` (`rubrik_id`, `quality_dimension_id`) VA
 (16, 1),
 (16, 2),
 (16, 3),
-(16, 4);
+(16, 4),
+(17, 1),
+(17, 2),
+(17, 3),
+(17, 4);
 
 -- --------------------------------------------------------
 
@@ -365,7 +407,21 @@ INSERT INTO `rubrik_questions` (`rubrik_id`, `question_id`) VALUES
 (15, 19),
 (16, 17),
 (16, 18),
-(16, 19);
+(16, 19),
+(17, 16),
+(17, 17),
+(17, 18),
+(17, 19),
+(17, 20),
+(17, 21),
+(17, 26),
+(17, 29),
+(17, 30),
+(17, 31),
+(17, 32),
+(17, 34),
+(17, 35),
+(17, 36);
 
 -- --------------------------------------------------------
 
@@ -534,31 +590,26 @@ ALTER TABLE `user_role`
 --
 ALTER TABLE `quality_dimension_master`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
 --
 -- AUTO_INCREMENT for table `question_master`
 --
 ALTER TABLE `question_master`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
-
 --
 -- AUTO_INCREMENT for table `role`
 --
 ALTER TABLE `role`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
 --
 -- AUTO_INCREMENT for table `rubrik`
 --
 ALTER TABLE `rubrik`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
-
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 --
 -- AUTO_INCREMENT for table `rubrik_type_master`
 --
 ALTER TABLE `rubrik_type_master`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
 --
 -- Constraints for dumped tables
 --
@@ -619,7 +670,6 @@ ALTER TABLE `rubrik_questions`
 ALTER TABLE `user_role`
   ADD CONSTRAINT `FKa68196081fvovjhkek5m97n3y` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`),
   ADD CONSTRAINT `FKdc28wohvgju313d3pisccud2` FOREIGN KEY (`user_email`) REFERENCES `user` (`email`);
-COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

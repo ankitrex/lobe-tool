@@ -62,7 +62,7 @@ public class QuestionMaster implements Serializable {
 	@Column(nullable = false, length = 3)
 	private boolean					optional;
 
-	@OneToMany(mappedBy = "questionMaster")
+	@OneToMany(mappedBy = "lobeScoresKey.questionMaster")
 	private Set<LobeScores>			lobeScores;
 
 	@OneToMany(mappedBy = "rubrikQuestionsKey.questionMaster")

@@ -20,5 +20,5 @@ public class RubrikQuestions implements Serializable {
 	private static final long	serialVersionUID	= 1L;
 
 	@EmbeddedId
-	RubrikQuestionsKey			rubrikQuestionsKey;
+	private RubrikQuestionsKey	rubrikQuestionsKey;
 }

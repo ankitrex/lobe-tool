@@ -30,4 +30,6 @@ public class QuestionVo {
 	private boolean	optional;
 
 	private Integer	dimensionId;
+
+	private Integer	score;
 }

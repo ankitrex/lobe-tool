@@ -41,7 +41,7 @@ public class LearningObject implements Serializable {
 
 	@Column(name = "repository_name", nullable = true, length = 100)
 	private String				repositoryName;
-	
+
 	@Column(name = "module_name", nullable = true, length = 100)
 	private String				moduleName;
 
@@ -66,6 +66,6 @@ public class LearningObject implements Serializable {
 	@JoinColumn(name = "rubrik_id", nullable = false)
 	private Rubrik				rubrik;
 
-	@OneToMany(mappedBy = "learningObject")
+	@OneToMany(mappedBy = "lobeScoresKey.learningObject")
 	private Set<LobeScores>		lobeScores;
 }

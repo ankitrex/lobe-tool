@@ -1,21 +1,13 @@
 package xyz.qwerty.lobetoolapis.vo;
 
 import java.time.LocalDateTime;
-import java.util.Set;
-
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import java.util.List;
 
 import lombok.Data;
-import xyz.qwerty.lobetoolapis.entity.LobeScores;
-import xyz.qwerty.lobetoolapis.entity.Rubrik;
-import xyz.qwerty.lobetoolapis.entity.User;
 
 @Data
 public class LearningObjectVo {
-	
+
 	private String				code;
 
 	private String				name;
@@ -39,8 +31,10 @@ public class LearningObjectVo {
 	private String				assignedTo;
 
 	private Integer				rubrikId;
-	
-	private String 				rubrikName;
-	
-	private Double 				percentage;
+
+	private String				rubrikName;
+
+	private Double				percentage;
+
+	private List<DimensionVo>	dimensionVos;
 }
