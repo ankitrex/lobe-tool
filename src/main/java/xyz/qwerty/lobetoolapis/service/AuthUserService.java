@@ -1,5 +1,7 @@
 package xyz.qwerty.lobetoolapis.service;
 
+import java.util.List;
+
 public interface AuthUserService {
 
 	Boolean validateUserCredentials(String email, String password);
@@ -13,4 +15,6 @@ public interface AuthUserService {
 	String getUserId(String accessToken);
 
 	Boolean checkUserAccess(String accessToken, String permission);
+
+	String getRole(String email);
 }

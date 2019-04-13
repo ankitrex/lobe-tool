@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -125,6 +127,13 @@ public class AuthUserServiceImpl implements AuthUserService {
 		}
 
 		return true;
+	}
+	
+
+	@Override
+	public String getRole(String email) {
+		
+		return userRepository.findById(email).get().getUserRole().stream().map(ur -> ur.getUserRoleKey().getRole().getName()).limit(1).collect(Collectors.toList()).get(0);
 	}
 
 	private List<String> getPermissions(String userId) {

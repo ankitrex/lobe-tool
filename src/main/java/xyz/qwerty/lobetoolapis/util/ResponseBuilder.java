@@ -1,5 +1,8 @@
 package xyz.qwerty.lobetoolapis.util;
 
+import java.util.List;
+import java.util.Set;
+
 import lombok.Data;
 
 @Data
@@ -13,4 +16,5 @@ public class ResponseBuilder {
 	private String	accessToken;
 	private String	refreshToken;
 	private String	userId;
+	private String role;
 }

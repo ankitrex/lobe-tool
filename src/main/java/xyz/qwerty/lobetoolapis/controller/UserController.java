@@ -2,10 +2,18 @@ package xyz.qwerty.lobetoolapis.controller;
 
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -23,17 +31,22 @@ import xyz.qwerty.lobetoolapis.vo.UserVo;
 
 @RestController
 @RequestMapping("/api/user")
+@Validated
 public class UserController {
 
 	@Autowired
-	UserService		userService;
+	UserService userService;
 
 	@Autowired
-	AuthUserService	authUserService;
+	AuthUserService authUserService;
 
 	@PostMapping("/register")
-	public ResponseEntity<ResponseBuilder> register(@RequestParam(name = "email") String email, @RequestParam(name = "name") String name,
-			@RequestParam(name = "password") String password, @RequestParam(name = "affiliation") String affiliation, Integer roleId) {
+	public ResponseEntity<ResponseBuilder> register(
+			@Email(message = "Invalid email address") @RequestParam(name = "email") String email,
+			@NotBlank(message = "Name cannot be blank") @RequestParam(name = "name") String name,
+			@NotBlank(message = "Password cannot be blank") @RequestParam(name = "password") String password,
+			@NotBlank(message = "Affiliation cannot be blank") @RequestParam(name = "affiliation") String affiliation,
+			@NotNull(message = "Role cannot be blank") Integer roleId) {
 
 		User user = new User();
 		user.setEmail(email);
@@ -43,8 +56,7 @@ public class UserController {
 		user.setCreatedTs(LocalDateTime.now());
 		try {
 			user.setPassword(PasswordHashing.getSHA256Hash(password));
-		}
-		catch (NoSuchAlgorithmException e) {
+		} catch (NoSuchAlgorithmException e) {
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error processing request");
 		}
 
@@ -59,7 +71,8 @@ public class UserController {
 	}
 
 	@GetMapping("/login")
-	public ResponseEntity<ResponseBuilder> login(@RequestParam(name = "email") String email, @RequestParam(name = "password") String password) {
+	public ResponseEntity<ResponseBuilder> login(@RequestParam(name = "email") String email,
+			@RequestParam(name = "password") String password) {
 
 		ResponseBuilder responseBuilder = new ResponseBuilder();
 
@@ -68,16 +81,17 @@ public class UserController {
 			responseBuilder.setCode(HttpStatus.BAD_REQUEST.value());
 			responseBuilder.setStatus(HttpStatus.BAD_REQUEST.getReasonPhrase());
 			responseBuilder.setMessage("Invalid credentials");
-		}
-		else {
+		} else {
 			responseBuilder.setCode(HttpStatus.OK.value());
 			responseBuilder.setStatus(HttpStatus.OK.getReasonPhrase());
 
 			String refreshToken = authUserService.getRefreshToken(email);
 			String accessToken = authUserService.getAccessToken(refreshToken);
+			String role = authUserService.getRole(email);
 
 			responseBuilder.setRefreshToken(refreshToken);
 			responseBuilder.setAccessToken(accessToken);
+			responseBuilder.setRole(role);
 		}
 
 		return new ResponseEntity<>(responseBuilder, HttpStatus.OK);

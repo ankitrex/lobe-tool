@@ -175,7 +175,7 @@ public class RubrikServiceImpl implements RubrikService {
 
 			Set<Rubrik> rubriks = user.get().getRubrik();
 
-			return rubriks.stream().map(r -> getRubrikVo(r)).collect(Collectors.toList());
+			return rubriks.stream().map(r -> getRubrikVo(r)).sorted((r1,r2) -> r1.getCreatedTs().compareTo(r2.getCreatedTs()) ).collect(Collectors.toList());
 		}
 
 		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found");
@@ -326,7 +326,7 @@ public class RubrikServiceImpl implements RubrikService {
 			QuestionMaster question = q.getRubrikQuestionsKey().getQuestionMaster();
 			return getQuestionVo(question);
 
-		}).collect(Collectors.toList());
+		}).sorted((q1,q2) -> q1.getId().compareTo(q2.getId())).collect(Collectors.toList());
 
 		dimensions.forEach(d -> {
 			QualityDimensionMaster dimension = d.getRubrikQualityDimensionsKey().getQualityDimensionMaster();
@@ -341,6 +341,8 @@ public class RubrikServiceImpl implements RubrikService {
 			dimensionVoList.add(dimensionVo);
 		});
 
+		dimensionVoList.sort((d1,d2) -> d1.getId().compareTo(d2.getId()));
+		
 		return dimensionVoList;
 	}
 
