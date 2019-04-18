@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
 
-import xyz.qwerty.lobetoolapis.entity.LearningObject;
 import xyz.qwerty.lobetoolapis.entity.QualityDimensionMaster;
 import xyz.qwerty.lobetoolapis.entity.QuestionMaster;
 import xyz.qwerty.lobetoolapis.entity.Rubrik;
@@ -35,7 +34,6 @@ import xyz.qwerty.lobetoolapis.repository.UserRepository;
 import xyz.qwerty.lobetoolapis.service.RubrikService;
 import xyz.qwerty.lobetoolapis.util.Constants;
 import xyz.qwerty.lobetoolapis.vo.DimensionVo;
-import xyz.qwerty.lobetoolapis.vo.LearningObjectVo;
 import xyz.qwerty.lobetoolapis.vo.QuestionVo;
 import xyz.qwerty.lobetoolapis.vo.RubrikVo;
 
@@ -175,7 +173,7 @@ public class RubrikServiceImpl implements RubrikService {
 
 			Set<Rubrik> rubriks = user.get().getRubrik();
 
-			return rubriks.stream().map(r -> getRubrikVo(r)).sorted((r1,r2) -> r1.getCreatedTs().compareTo(r2.getCreatedTs()) ).collect(Collectors.toList());
+			return rubriks.stream().map(r -> getRubrikVo(r)).sorted((r1, r2) -> r1.getCreatedTs().compareTo(r2.getCreatedTs())).collect(Collectors.toList());
 		}
 
 		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found");
@@ -259,7 +257,7 @@ public class RubrikServiceImpl implements RubrikService {
 				rubrik.setStatus(Constants.STATUS_COMPLETE);
 				rubrikRepository.save(rubrik);
 			}
-			
+
 			rubrik.setUpdatedTs(LocalDateTime.now());
 			rubrikRepository.save(rubrik);
 
@@ -326,7 +324,7 @@ public class RubrikServiceImpl implements RubrikService {
 			QuestionMaster question = q.getRubrikQuestionsKey().getQuestionMaster();
 			return getQuestionVo(question);
 
-		}).sorted((q1,q2) -> q1.getId().compareTo(q2.getId())).collect(Collectors.toList());
+		}).sorted((q1, q2) -> q1.getId().compareTo(q2.getId())).collect(Collectors.toList());
 
 		dimensions.forEach(d -> {
 			QualityDimensionMaster dimension = d.getRubrikQualityDimensionsKey().getQualityDimensionMaster();
@@ -341,8 +339,8 @@ public class RubrikServiceImpl implements RubrikService {
 			dimensionVoList.add(dimensionVo);
 		});
 
-		dimensionVoList.sort((d1,d2) -> d1.getId().compareTo(d2.getId()));
-		
+		dimensionVoList.sort((d1, d2) -> d1.getId().compareTo(d2.getId()));
+
 		return dimensionVoList;
 	}
 
@@ -355,16 +353,25 @@ public class RubrikServiceImpl implements RubrikService {
 		questionVo.setQuestion(questionMaster.getQuestion());
 		questionVo.setQuestionMeta(questionMaster.getQuestionMeta());
 		questionVo.setScore0(questionMaster.getScore0());
-		questionVo.setScore0Images(questionMaster.getScore0Images());
+		questionVo.setScore0Images(getImageList(questionMaster.getScore0Images()));
 		questionVo.setScore1(questionMaster.getScore1());
-		questionVo.setScore1Images(questionMaster.getScore1Images());
+		questionVo.setScore1Images(getImageList(questionMaster.getScore1Images()));
 		questionVo.setScore2(questionMaster.getScore2());
-		questionVo.setScore2Images(questionMaster.getScore2Images());
+		questionVo.setScore2Images(getImageList(questionMaster.getScore2Images()));
 		questionVo.setScore3(questionMaster.getScore3());
-		questionVo.setScore3Images(questionMaster.getScore3Images());
+		questionVo.setScore3Images(getImageList(questionMaster.getScore3Images()));
 		questionVo.setDimensionId(questionMaster.getQualityDimensionMaster().getId());
 
 		return questionVo;
+	}
+
+	private List<String> getImageList(String imagesString) {
+
+		if (StringUtils.isEmpty(imagesString)) {
+			return new ArrayList<>();
+		}
+
+		return Arrays.asList(imagesString.split(","));
 	}
 
 }

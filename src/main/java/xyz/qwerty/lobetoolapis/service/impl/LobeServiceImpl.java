@@ -2,6 +2,7 @@ package xyz.qwerty.lobetoolapis.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
 
 import xyz.qwerty.lobetoolapis.entity.LearningObject;
@@ -48,31 +50,31 @@ import xyz.qwerty.lobetoolapis.vo.RubrikTypeVo;
 public class LobeServiceImpl implements LobeService {
 
 	@Autowired
-	RoleRepository roleRepository;
+	RoleRepository						roleRepository;
 
 	@Autowired
-	QualityDimensionMasterRepository qualityDimensionMasterRepository;
+	QualityDimensionMasterRepository	qualityDimensionMasterRepository;
 
 	@Autowired
-	RubrikTypeMasterRepository rubrikTypeMasterRepository;
+	RubrikTypeMasterRepository			rubrikTypeMasterRepository;
 
 	@Autowired
-	RubrikRepository rubrikRepository;
+	RubrikRepository					rubrikRepository;
 
 	@Autowired
-	LearningObjectRepository learningObjectRepository;
+	LearningObjectRepository			learningObjectRepository;
 
 	@Autowired
-	UserRepository userRepository;
+	UserRepository						userRepository;
 
 	@Autowired
-	JavaMailSender emailSender;
+	JavaMailSender						emailSender;
 
 	@Autowired
-	RubrikService rubrikService;
+	RubrikService						rubrikService;
 
 	@Autowired
-	LobeScoresRepository lobeScoresRepository;
+	LobeScoresRepository				lobeScoresRepository;
 
 	@Override
 	public List<RoleVo> getAllRoles() {
@@ -115,8 +117,8 @@ public class LobeServiceImpl implements LobeService {
 	}
 
 	@Override
-	public LearningObjectVo assignLearningObject(String userId, Integer rubrikId, String rubrikCode, String msgSubject,
-			String msgBody, String learningObjectName, String evaluatorEmail) {
+	public LearningObjectVo assignLearningObject(String userId, Integer rubrikId, String rubrikCode, String msgSubject, String msgBody, String learningObjectName,
+			String evaluatorEmail) {
 
 		Optional<Rubrik> result = rubrikRepository.findById(rubrikId);
 		if (result.isPresent()) {
@@ -131,7 +133,8 @@ public class LobeServiceImpl implements LobeService {
 			Optional<User> evaluator = userRepository.findById(evaluatorEmail);
 			if (!evaluator.isPresent()) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, evaluatorEmail + " not registered");
-			} else {
+			}
+			else {
 				List<String> userPermissions = new ArrayList<>();
 				evaluator.get().getUserRole().forEach(role -> {
 					role.getUserRoleKey().getRole().getRolePermission().forEach(rolePerm -> {
@@ -183,8 +186,7 @@ public class LobeServiceImpl implements LobeService {
 
 			User u = user.get();
 
-			Set<LearningObject> learningObjects = type.equals(Constants.TYPE_GENERATOR) ? u.getLearningObject()
-					: u.getLearningObject2();
+			Set<LearningObject> learningObjects = type.equals(Constants.TYPE_GENERATOR) ? u.getLearningObject() : u.getLearningObject2();
 
 			return learningObjects.stream().map(l -> getEvalLearningObject(l, type)).collect(Collectors.toList());
 		}
@@ -193,8 +195,7 @@ public class LobeServiceImpl implements LobeService {
 	}
 
 	@Override
-	public LearningObjectVo updateLearningObject(String userId, String code, String grade, String subject,
-			String chapter, String moduleName, String repositoryName) {
+	public LearningObjectVo updateLearningObject(String userId, String code, String grade, String subject, String chapter, String moduleName, String repositoryName) {
 
 		Optional<LearningObject> learningObject = learningObjectRepository.findById(code);
 		if (learningObject.isPresent()) {
@@ -254,8 +255,7 @@ public class LobeServiceImpl implements LobeService {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Evaluation already submitted");
 			}
 
-			List<Integer> questions = l.getRubrik().getRubrikQuestions().stream()
-					.map(q -> q.getRubrikQuestionsKey().getQuestionMaster().getId()).collect(Collectors.toList());
+			List<Integer> questions = l.getRubrik().getRubrikQuestions().stream().map(q -> q.getRubrikQuestionsKey().getQuestionMaster().getId()).collect(Collectors.toList());
 
 			for (Entry<Integer, Integer> entry : json.entrySet()) {
 
@@ -288,7 +288,8 @@ public class LobeServiceImpl implements LobeService {
 				if (totalQuestions == completedQuestions) {
 					l.setStatus(Constants.STATUS_COMPLETE);
 					learningObjectRepository.save(l);
-				} else {
+				}
+				else {
 					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not all questions have been scored");
 				}
 			}
@@ -327,8 +328,7 @@ public class LobeServiceImpl implements LobeService {
 			dimensionVo.setId(dimension.getId());
 			dimensionVo.setDimensionName(dimension.getDimensionName());
 
-			List<QuestionVo> rubrikQuestions = questions.stream().filter(q -> q.getDimensionId() == dimensionVo.getId())
-					.collect(Collectors.toList());
+			List<QuestionVo> rubrikQuestions = questions.stream().filter(q -> q.getDimensionId() == dimensionVo.getId()).collect(Collectors.toList());
 			dimensionVo.setQuestions(rubrikQuestions);
 
 			dimensionVoList.add(dimensionVo);
@@ -375,17 +375,26 @@ public class LobeServiceImpl implements LobeService {
 		questionVo.setQuestion(questionMaster.getQuestion());
 		questionVo.setQuestionMeta(questionMaster.getQuestionMeta());
 		questionVo.setScore0(questionMaster.getScore0());
-		questionVo.setScore0Images(questionMaster.getScore0Images());
+		questionVo.setScore0Images(getImageList(questionMaster.getScore0Images()));
 		questionVo.setScore1(questionMaster.getScore1());
-		questionVo.setScore1Images(questionMaster.getScore1Images());
+		questionVo.setScore1Images(getImageList(questionMaster.getScore1Images()));
 		questionVo.setScore2(questionMaster.getScore2());
-		questionVo.setScore2Images(questionMaster.getScore2Images());
+		questionVo.setScore2Images(getImageList(questionMaster.getScore2Images()));
 		questionVo.setScore3(questionMaster.getScore3());
-		questionVo.setScore3Images(questionMaster.getScore3Images());
+		questionVo.setScore3Images(getImageList(questionMaster.getScore3Images()));
 		questionVo.setDimensionId(questionMaster.getQualityDimensionMaster().getId());
 		questionVo.setScore(score);
 
 		return questionVo;
+	}
+
+	private List<String> getImageList(String imagesString) {
+
+		if (StringUtils.isEmpty(imagesString)) {
+			return new ArrayList<>();
+		}
+
+		return Arrays.asList(imagesString.split(","));
 	}
 
 }
