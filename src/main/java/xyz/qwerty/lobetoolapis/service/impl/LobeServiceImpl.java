@@ -10,6 +10,8 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -164,12 +166,20 @@ public class LobeServiceImpl implements LobeService {
 			learningObject.setUser2(assignedTo);
 
 			learningObjectRepository.save(learningObject);
-
-			SimpleMailMessage message = new SimpleMailMessage();
-			message.setTo(evaluatorEmail);
-			message.setSubject(msgSubject);
-			message.setText(msgBody + "\ncode: " + code);
-			emailSender.send(message);
+			
+			ExecutorService executorService = Executors.newFixedThreadPool(1);
+			
+			executorService.execute(new Runnable() {
+				
+				@Override
+				public void run() {
+					SimpleMailMessage message = new SimpleMailMessage();
+					message.setTo(evaluatorEmail);
+					message.setSubject(msgSubject);
+					message.setText(msgBody + "\ncode: " + code);
+					emailSender.send(message);
+				}
+			});
 
 			return getLearningObjectVo(learningObject);
 		}
