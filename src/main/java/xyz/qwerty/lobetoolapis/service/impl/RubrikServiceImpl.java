@@ -69,6 +69,9 @@ public class RubrikServiceImpl implements RubrikService {
 
 	@Value("${optional.question.id}")
 	private Integer						optionalQuestionId;
+	
+	@Value("${design.efficacy.dimension.id}")
+	private Integer 					designEfficacyDimensionId;
 
 	@Override
 	public RubrikVo createRubrik(String userId, Integer rubrikTypeId, String dimensionIds) {
@@ -103,6 +106,10 @@ public class RubrikServiceImpl implements RubrikService {
 		else {
 
 			rubrikDimensions = allQualityDimensions;
+			
+			if(!premiumRubrikId.equals(rubrikTypeId)) {
+				allQualityDimensions.remove(designEfficacyDimensionId);
+			}
 		}
 
 		User user = new User();
