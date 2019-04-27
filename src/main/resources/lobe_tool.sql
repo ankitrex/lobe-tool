@@ -241,8 +241,8 @@ CREATE TABLE `rubrik` (
 --
 
 INSERT INTO `rubrik` (`id`, `created_ts`, `name`, `status`, `type`, `updated_ts`, `user_email`) VALUES
-(1, '2019-04-27 17:33:19.000000', 'LOBE_LITE_1', 'incomplete', 1, '2019-04-27 17:33:19.000000', 'ankitx@gmail.com'),
-(2, '2019-04-27 17:33:29.000000', 'LOBE_PREMIUM_2', 'incomplete', 2, '2019-04-27 17:33:29.000000', 'ankitx@gmail.com');
+(1, '2019-04-27 17:33:19.000000', 'LOBE_LITE_1', 'sample', 1, '2019-04-27 17:33:19.000000', 'ankitx@gmail.com'),
+(2, '2019-04-27 17:33:29.000000', 'LOBE_PREMIUM_2', 'sample', 2, '2019-04-27 17:33:29.000000', 'ankitx@gmail.com');
 
 -- --------------------------------------------------------
 
