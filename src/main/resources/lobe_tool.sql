@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 27, 2019 at 01:32 PM
+-- Generation Time: Apr 27, 2019 at 02:05 PM
 -- Server version: 10.1.38-MariaDB
 -- PHP Version: 7.3.2
 
@@ -241,8 +241,8 @@ CREATE TABLE `rubrik` (
 --
 
 INSERT INTO `rubrik` (`id`, `created_ts`, `name`, `status`, `type`, `updated_ts`, `user_email`) VALUES
-(1, '2019-04-26 18:13:04.000000', 'LOBE_LITE_1', 'sample', 1, '2019-04-27 15:12:14.000000', 'ankitx@gmail.com'),
-(2, '2019-04-26 18:13:38.000000', 'LOBE_PREMIUM_2', 'sample', 2, '2019-04-26 18:13:38.000000', 'ankitx@gmail.com');
+(1, '2019-04-27 17:33:19.000000', 'LOBE_LITE_1', 'incomplete', 1, '2019-04-27 17:33:19.000000', 'ankitx@gmail.com'),
+(2, '2019-04-27 17:33:29.000000', 'LOBE_PREMIUM_2', 'incomplete', 2, '2019-04-27 17:33:29.000000', 'ankitx@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -255,6 +255,19 @@ CREATE TABLE `rubrik_quality_dimensions` (
   `quality_dimension_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `rubrik_quality_dimensions`
+--
+
+INSERT INTO `rubrik_quality_dimensions` (`rubrik_id`, `quality_dimension_id`) VALUES
+(1, 1),
+(1, 2),
+(1, 4),
+(2, 1),
+(2, 2),
+(2, 3),
+(2, 4);
+
 -- --------------------------------------------------------
 
 --
@@ -265,6 +278,60 @@ CREATE TABLE `rubrik_questions` (
   `rubrik_id` int(11) NOT NULL,
   `question_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `rubrik_questions`
+--
+
+INSERT INTO `rubrik_questions` (`rubrik_id`, `question_id`) VALUES
+(1, 1),
+(1, 2),
+(1, 3),
+(1, 4),
+(1, 5),
+(1, 6),
+(1, 7),
+(1, 8),
+(1, 9),
+(1, 10),
+(2, 11),
+(2, 12),
+(2, 13),
+(2, 14),
+(2, 15),
+(2, 16),
+(2, 17),
+(2, 18),
+(2, 19),
+(2, 20),
+(2, 21),
+(2, 22),
+(2, 23),
+(2, 24),
+(2, 25),
+(2, 26),
+(2, 27),
+(2, 28),
+(2, 29),
+(2, 30),
+(2, 31),
+(2, 32),
+(2, 33),
+(2, 34),
+(2, 35),
+(2, 36),
+(2, 37),
+(2, 38),
+(2, 41),
+(2, 42),
+(2, 43),
+(2, 45),
+(2, 46),
+(2, 47),
+(2, 48),
+(2, 49),
+(2, 50),
+(2, 51);
 
 -- --------------------------------------------------------
 
@@ -448,7 +515,7 @@ ALTER TABLE `role`
 -- AUTO_INCREMENT for table `rubrik`
 --
 ALTER TABLE `rubrik`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `rubrik_type_master`
