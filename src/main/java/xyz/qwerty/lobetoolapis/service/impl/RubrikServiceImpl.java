@@ -202,6 +202,18 @@ public class RubrikServiceImpl implements RubrikService {
 
 		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid rubrik id");
 	}
+	
+	@Override
+	public RubrikVo getRubrikDetails(Integer rubrikId) {
+		
+		Optional<Rubrik> result = rubrikRepository.findById(rubrikId);
+		if (result.isPresent()) {
+
+			return getCompleteRubrikVo(result.get());
+		}
+
+		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid rubrik id");
+	}
 
 	@Override
 	public DimensionVo getDimensionVo(Integer dimensionId, Integer rubrikTypeId) {
