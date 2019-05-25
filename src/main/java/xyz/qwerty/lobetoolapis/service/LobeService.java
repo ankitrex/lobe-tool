@@ -23,7 +23,7 @@ public interface LobeService {
 
 	LearningObjectVo updateLearningObject(String userId, String code, String grade, String subject, String chapter, String lobeName, String repositoryName);
 
-	LearningObjectVo getLobeRubrik(String userId, String code);
+	LearningObjectVo getLobeRubrik(String userId, Integer lobeId);
 
-	LearningObjectVo updateLobeScores(String userId, String code, Map<Integer, Integer> json, Boolean submit);
+	LearningObjectVo updateLobeScores(String userId, Integer lobeId, Map<Integer, Integer> json, Boolean submit);
 }

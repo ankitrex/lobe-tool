@@ -190,7 +190,7 @@ public class LobeController {
 
 	@GetMapping("/get-lobe-questions")
 	public ResponseEntity<ResponseBuilder> getLobeQuestions(@RequestHeader(name = "Authorization") String authorization,
-			@RequestParam(name = "code") String code) {
+			@RequestParam(name = "lobeId") Integer lobeId) {
 
 		ResponseBuilder responseBuilder = new ResponseBuilder();
 
@@ -203,7 +203,7 @@ public class LobeController {
 
 			String userId = authUserService.getUserId(accessToken);
 
-			LearningObjectVo learningObjectVo = lobeService.getLobeRubrik(userId, code);
+			LearningObjectVo learningObjectVo = lobeService.getLobeRubrik(userId, lobeId);
 
 			responseBuilder.setCode(HttpStatus.OK.value());
 			responseBuilder.setStatus(HttpStatus.OK.getReasonPhrase());
@@ -219,7 +219,7 @@ public class LobeController {
 
 	@PostMapping("/update-lobe-score")
 	public ResponseEntity<ResponseBuilder> createNewReview(@RequestHeader(name = "Authorization") String authorization,
-			@RequestParam(name = "code") String code, @RequestParam(name = "json") Map<Integer, Integer> json,
+			@RequestParam(name = "lobeId") Integer lobeId, @RequestParam(name = "json") Map<Integer, Integer> json,
 			@RequestParam(name = "submit") Boolean submit) {
 
 		ResponseBuilder responseBuilder = new ResponseBuilder();
@@ -233,7 +233,7 @@ public class LobeController {
 
 			String userId = authUserService.getUserId(accessToken);
 
-			lobeService.updateLobeScores(userId, code, json, submit);
+			lobeService.updateLobeScores(userId, lobeId, json, submit);
 
 			responseBuilder.setCode(HttpStatus.OK.value());
 			responseBuilder.setStatus(HttpStatus.OK.getReasonPhrase());

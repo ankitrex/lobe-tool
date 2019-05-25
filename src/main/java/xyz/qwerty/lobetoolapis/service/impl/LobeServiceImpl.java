@@ -263,9 +263,9 @@ public class LobeServiceImpl implements LobeService {
 	}
 
 	@Override
-	public LearningObjectVo getLobeRubrik(String userId, String code) {
+	public LearningObjectVo getLobeRubrik(String userId, Integer lobeId) {
 
-		Optional<LearningObject> learningObject = learningObjectRepository.findById(code);
+		Optional<LearningObject> learningObject = learningObjectRepository.findById(lobeId);
 		if (learningObject.isPresent()) {
 
 			LearningObject l = learningObject.get();
@@ -280,9 +280,9 @@ public class LobeServiceImpl implements LobeService {
 	}
 
 	@Override
-	public LearningObjectVo updateLobeScores(String userId, String code, Map<Integer, Integer> json, Boolean submit) {
+	public LearningObjectVo updateLobeScores(String userId, Integer lobeId, Map<Integer, Integer> json, Boolean submit) {
 
-		Optional<LearningObject> learningObject = learningObjectRepository.findById(code);
+		Optional<LearningObject> learningObject = learningObjectRepository.findById(lobeId);
 		if (learningObject.isPresent()) {
 
 			LearningObject l = learningObject.get();
