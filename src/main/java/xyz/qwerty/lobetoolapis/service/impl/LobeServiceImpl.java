@@ -25,6 +25,7 @@ import org.springframework.web.server.ResponseStatusException;
 import xyz.qwerty.lobetoolapis.entity.LearningObject;
 import xyz.qwerty.lobetoolapis.entity.LobeScores;
 import xyz.qwerty.lobetoolapis.entity.LobeScoresKey;
+import xyz.qwerty.lobetoolapis.entity.LobeTemp;
 import xyz.qwerty.lobetoolapis.entity.QualityDimensionMaster;
 import xyz.qwerty.lobetoolapis.entity.QuestionMaster;
 import xyz.qwerty.lobetoolapis.entity.Role;
@@ -34,6 +35,7 @@ import xyz.qwerty.lobetoolapis.entity.RubrikTypeMaster;
 import xyz.qwerty.lobetoolapis.entity.User;
 import xyz.qwerty.lobetoolapis.repository.LearningObjectRepository;
 import xyz.qwerty.lobetoolapis.repository.LobeScoresRepository;
+import xyz.qwerty.lobetoolapis.repository.LobeTempRepository;
 import xyz.qwerty.lobetoolapis.repository.QualityDimensionMasterRepository;
 import xyz.qwerty.lobetoolapis.repository.RoleRepository;
 import xyz.qwerty.lobetoolapis.repository.RubrikRepository;
@@ -52,31 +54,34 @@ import xyz.qwerty.lobetoolapis.vo.RubrikTypeVo;
 public class LobeServiceImpl implements LobeService {
 
 	@Autowired
-	RoleRepository						roleRepository;
+	RoleRepository roleRepository;
 
 	@Autowired
-	QualityDimensionMasterRepository	qualityDimensionMasterRepository;
+	QualityDimensionMasterRepository qualityDimensionMasterRepository;
 
 	@Autowired
-	RubrikTypeMasterRepository			rubrikTypeMasterRepository;
+	RubrikTypeMasterRepository rubrikTypeMasterRepository;
 
 	@Autowired
-	RubrikRepository					rubrikRepository;
+	RubrikRepository rubrikRepository;
 
 	@Autowired
-	LearningObjectRepository			learningObjectRepository;
+	LearningObjectRepository learningObjectRepository;
 
 	@Autowired
-	UserRepository						userRepository;
+	UserRepository userRepository;
 
 	@Autowired
-	JavaMailSender						emailSender;
+	JavaMailSender emailSender;
 
 	@Autowired
-	RubrikService						rubrikService;
+	RubrikService rubrikService;
 
 	@Autowired
-	LobeScoresRepository				lobeScoresRepository;
+	LobeScoresRepository lobeScoresRepository;
+	
+	@Autowired
+	LobeTempRepository lobeTempRepository;
 
 	@Override
 	public List<RoleVo> getAllRoles() {
@@ -119,8 +124,8 @@ public class LobeServiceImpl implements LobeService {
 	}
 
 	@Override
-	public LearningObjectVo assignLearningObject(String userId, Integer rubrikId, String rubrikCode, String msgSubject, String msgBody, String learningObjectName,
-			String evaluatorEmail) {
+	public LearningObjectVo assignLearningObject(String userId, Integer rubrikId, String msgSubject,
+			String msgBody, String learningObjects, String evaluatorEmail) {
 
 		Optional<Rubrik> result = rubrikRepository.findById(rubrikId);
 		if (result.isPresent()) {
@@ -132,56 +137,48 @@ public class LobeServiceImpl implements LobeService {
 			if (Constants.STATUS_INCOMPLETE.equals(rubrik.getStatus())) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Incomplete rubrik can't be assigned");
 			}
-			Optional<User> evaluator = userRepository.findById(evaluatorEmail);
-			if (!evaluator.isPresent()) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, evaluatorEmail + " not registered");
-			}
-			else {
-				List<String> userPermissions = new ArrayList<>();
-				evaluator.get().getUserRole().forEach(role -> {
-					role.getUserRoleKey().getRole().getRolePermission().forEach(rolePerm -> {
-						userPermissions.add(rolePerm.getPermission().getName());
-					});
-				});
-				if (!userPermissions.contains("evaluate_rubrik")) {
-					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, evaluatorEmail + " is not an evaluator");
-				}
-			}
 
-			String code = rubrikCode + "-" + UUID.randomUUID().toString();
-
-			LearningObject learningObject = new LearningObject();
-			learningObject.setCode(code);
-			learningObject.setName(learningObjectName);
-			learningObject.setStatus(Constants.STATUS_ASSIGNED);
-			learningObject.setCreatedTs(LocalDateTime.now());
-			learningObject.setRubrik(rubrik);
-
-			User assignedBy = new User();
-			assignedBy.setEmail(userId);
-			learningObject.setUser(assignedBy);
-
-			User assignedTo = new User();
-			assignedTo.setEmail(evaluatorEmail);
-			learningObject.setUser2(assignedTo);
-
-			learningObjectRepository.save(learningObject);
+			String code = UUID.randomUUID().toString();
 			
+			List<String> lobes = Arrays.asList(learningObjects.split(",")).stream().map(String::trim).distinct().collect(Collectors.toList());
+			
+				lobes.forEach(lobeName -> {
+				
+				LobeTemp lobeTemp = new LobeTemp();
+				lobeTemp.setAssignedBy(userId);
+				lobeTemp.setAssignedTo(evaluatorEmail);
+				lobeTemp.setCode(code);
+				lobeTemp.setCreatedTs(LocalDateTime.now());
+				lobeTemp.setLearningObjectName(lobeName.trim());
+				lobeTemp.setRubrikId(rubrikId);
+				
+				lobeTempRepository.save(lobeTemp);
+			});
+
 			ExecutorService executorService = Executors.newFixedThreadPool(1);
 			
+			StringBuilder sb = new StringBuilder();
+			sb.append(msgSubject);
+			sb.append("\n");
+			sb.append("code: "+code);
+			sb.append("\n");
+			sb.append("learning objects: "+lobes);
+			
+			System.out.println(sb.toString());
+
 			executorService.execute(new Runnable() {
-				
+
 				@Override
 				public void run() {
 					SimpleMailMessage message = new SimpleMailMessage();
 					message.setTo(evaluatorEmail);
 					message.setSubject(msgSubject);
-					message.setText(msgBody + "\ncode: " + code);
+					message.setText(sb.toString());
 					emailSender.send(message);
 				}
 			});
 
-			return getLearningObjectVo(learningObject);
+			return null;
 		}
 
 		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid rubrik id");
@@ -196,7 +193,8 @@ public class LobeServiceImpl implements LobeService {
 
 			User u = user.get();
 
-			Set<LearningObject> learningObjects = type.equals(Constants.TYPE_GENERATOR) ? u.getLearningObject() : u.getLearningObject2();
+			Set<LearningObject> learningObjects = type.equals(Constants.TYPE_GENERATOR) ? u.getLearningObject()
+					: u.getLearningObject2();
 
 			return learningObjects.stream().map(l -> getEvalLearningObject(l, type)).collect(Collectors.toList());
 		}
@@ -205,7 +203,8 @@ public class LobeServiceImpl implements LobeService {
 	}
 
 	@Override
-	public LearningObjectVo updateLearningObject(String userId, String code, String grade, String subject, String chapter, String moduleName, String repositoryName) {
+	public LearningObjectVo updateLearningObject(String userId, String code, String grade, String subject,
+			String chapter, String moduleName, String repositoryName) {
 
 		Optional<LearningObject> learningObject = learningObjectRepository.findById(code);
 		if (learningObject.isPresent()) {
@@ -265,7 +264,8 @@ public class LobeServiceImpl implements LobeService {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Evaluation already submitted");
 			}
 
-			List<Integer> questions = l.getRubrik().getRubrikQuestions().stream().map(q -> q.getRubrikQuestionsKey().getQuestionMaster().getId()).collect(Collectors.toList());
+			List<Integer> questions = l.getRubrik().getRubrikQuestions().stream()
+					.map(q -> q.getRubrikQuestionsKey().getQuestionMaster().getId()).collect(Collectors.toList());
 
 			for (Entry<Integer, Integer> entry : json.entrySet()) {
 
@@ -298,8 +298,7 @@ public class LobeServiceImpl implements LobeService {
 				if (totalQuestions == completedQuestions) {
 					l.setStatus(Constants.STATUS_COMPLETE);
 					learningObjectRepository.save(l);
-				}
-				else {
+				} else {
 					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not all questions have been scored");
 				}
 			}
@@ -338,7 +337,8 @@ public class LobeServiceImpl implements LobeService {
 			dimensionVo.setId(dimension.getId());
 			dimensionVo.setDimensionName(dimension.getDimensionName());
 
-			List<QuestionVo> rubrikQuestions = questions.stream().filter(q -> q.getDimensionId() == dimensionVo.getId()).collect(Collectors.toList());
+			List<QuestionVo> rubrikQuestions = questions.stream().filter(q -> q.getDimensionId() == dimensionVo.getId())
+					.collect(Collectors.toList());
 			dimensionVo.setQuestions(rubrikQuestions);
 
 			dimensionVoList.add(dimensionVo);

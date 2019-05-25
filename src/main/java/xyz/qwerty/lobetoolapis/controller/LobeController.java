@@ -2,6 +2,7 @@ package xyz.qwerty.lobetoolapis.controller;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -89,10 +90,9 @@ public class LobeController {
 	@PostMapping("/assign")
 	public ResponseEntity<ResponseBuilder> assignRubrik(@RequestHeader(name = "Authorization") String authorization,
 			@NotNull(message = "Rubrik ID cannot be blank") @RequestParam(name = "rubrikId") Integer rubrikId,
-			@NotBlank(message = "Rubrik code cannot be blank") @RequestParam(name = "rubrikCode") String rubrikCode,
 			@NotBlank(message = "Message title cannot be blank") @RequestParam(name = "msgSubject") String msgSubject,
 			@NotBlank(message = "Message body be blank") @RequestParam(name = "msgBody") String msgBody,
-			@NotBlank(message = "Learning object name cannot be blank") @RequestParam(name = "learningObjectName") String learningObjectName,
+			@NotNull(message = "LOBE name cannot be blank")@RequestParam(name = "learningObjectName") String learningObjects,
 			@NotBlank(message = "Email cannot be blank") @Email(message = "Invalid email address") @RequestParam(name = "evaluatorEmail") String evaluatorEmail) {
 
 		ResponseBuilder responseBuilder = new ResponseBuilder();
@@ -106,8 +106,8 @@ public class LobeController {
 
 			String userId = authUserService.getUserId(accessToken);
 
-			LearningObjectVo learningObjectVo = lobeService.assignLearningObject(userId, rubrikId, rubrikCode,
-					msgSubject, msgBody, learningObjectName, evaluatorEmail);
+			LearningObjectVo learningObjectVo = lobeService.assignLearningObject(userId, rubrikId,
+					msgSubject, msgBody, learningObjects, evaluatorEmail);
 
 			responseBuilder.setData(learningObjectVo);
 			responseBuilder.setCode(HttpStatus.OK.value());
