@@ -353,7 +353,7 @@ public class LobeServiceImpl implements LobeService {
 			QuestionMaster questionMaster = rq.getRubrikQuestionsKey().getQuestionMaster();
 			Integer score = scores.get(questionMaster.getId());
 			return getQuestionVo(questionMaster, score);
-		}).collect(Collectors.toList());
+		}).sorted((q1, q2) -> q1.getId().compareTo(q2.getId())).collect(Collectors.toList());
 
 		Set<RubrikQualityDimensions> dimensions = l.getRubrik().getRubrikQualityDimensions();
 
@@ -372,6 +372,8 @@ public class LobeServiceImpl implements LobeService {
 
 			dimensionVoList.add(dimensionVo);
 		});
+		
+		dimensionVoList.sort((d1, d2) -> d1.getId().compareTo(d2.getId()));
 
 		learningObjectVo.setDimensionVos(dimensionVoList);
 
