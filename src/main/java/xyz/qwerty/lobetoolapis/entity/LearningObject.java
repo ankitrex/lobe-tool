@@ -8,6 +8,8 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -24,11 +26,12 @@ public class LearningObject implements Serializable {
 	private static final long	serialVersionUID	= 1L;
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(unique = true, nullable = false, precision = 10)
+	private int								id;
+	
 	@Column(unique = true, nullable = false, length = 200)
 	private String				code;
-
-	@Column(nullable = false, length = 100)
-	private String				name;
 
 	@Column(nullable = true, length = 100)
 	private String				grade;

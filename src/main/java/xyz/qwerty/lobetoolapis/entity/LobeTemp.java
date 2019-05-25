@@ -42,4 +42,10 @@ public class LobeTemp implements Serializable{
 	
 	@Column(name = "created_ts", nullable = false)
 	private LocalDateTime					createdTs;
+	
+	@Column(name = "status", nullable = false)
+	private String					status;
+	
+	@Column(name = "rubrik_name", nullable = false)
+	private String					rubrikName;
 }

@@ -7,6 +7,8 @@ import lombok.Data;
 
 @Data
 public class LearningObjectVo {
+	
+	private Integer id;
 
 	private String				code;
 

@@ -21,7 +21,7 @@ public interface LobeService {
 
 	List<LearningObjectVo> getAllEvaluations(String userId, String type);
 
-	LearningObjectVo updateLearningObject(String userId, String code, String grade, String subject, String chapter, String moduleName, String repositoryName);
+	LearningObjectVo updateLearningObject(String userId, String code, String grade, String subject, String chapter, String lobeName, String repositoryName);
 
 	LearningObjectVo getLobeRubrik(String userId, String code);
 

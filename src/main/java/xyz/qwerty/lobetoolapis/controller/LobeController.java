@@ -92,7 +92,7 @@ public class LobeController {
 			@NotNull(message = "Rubrik ID cannot be blank") @RequestParam(name = "rubrikId") Integer rubrikId,
 			@NotBlank(message = "Message title cannot be blank") @RequestParam(name = "msgSubject") String msgSubject,
 			@NotBlank(message = "Message body be blank") @RequestParam(name = "msgBody") String msgBody,
-			@NotBlank(message = "LOBE name cannot be blank")@RequestParam(name = "learningObjectName") String learningObjects,
+			@NotBlank(message = "LOBE name cannot be blank") @RequestParam(name = "learningObjectName") String learningObjects,
 			@NotBlank(message = "Email cannot be blank") @Email(message = "Invalid email address") @RequestParam(name = "evaluatorEmail") String evaluatorEmail) {
 
 		ResponseBuilder responseBuilder = new ResponseBuilder();
@@ -106,8 +106,8 @@ public class LobeController {
 
 			String userId = authUserService.getUserId(accessToken);
 
-			LearningObjectVo learningObjectVo = lobeService.assignLearningObject(userId, rubrikId,
-					msgSubject, msgBody, learningObjects, evaluatorEmail);
+			LearningObjectVo learningObjectVo = lobeService.assignLearningObject(userId, rubrikId, msgSubject, msgBody,
+					learningObjects, evaluatorEmail);
 
 			responseBuilder.setData(learningObjectVo);
 			responseBuilder.setCode(HttpStatus.OK.value());
@@ -157,10 +157,11 @@ public class LobeController {
 
 	@PostMapping("/new-review")
 	public ResponseEntity<ResponseBuilder> createNewReview(@RequestHeader(name = "Authorization") String authorization,
-			@RequestParam(name = "code") String code, @RequestParam(name = "grade") String grade,
+			@NotBlank(message = "Code cannot be blank") @RequestParam(name = "code") String code,
+			@NotBlank(message = "Message title cannot be blank") @RequestParam(name = "grade") String grade,
 			@RequestParam(name = "subject") String subject, @RequestParam(name = "chapter") String chapter,
-			@RequestParam(name = "moduleName") String moduleName,
-			@RequestParam(name = "repositoryName") String repositoryName) {
+			@NotBlank(message = "Learning object name cannot be blank") @RequestParam(name = "lobeName") String lobeName,
+			@NotBlank(message = "Repository name cannot be blank") @RequestParam(name = "repositoryName") String repositoryName) {
 
 		ResponseBuilder responseBuilder = new ResponseBuilder();
 
@@ -174,7 +175,7 @@ public class LobeController {
 			String userId = authUserService.getUserId(accessToken);
 
 			LearningObjectVo learningObject = lobeService.updateLearningObject(userId, code, grade, subject, chapter,
-					moduleName, repositoryName);
+					lobeName, repositoryName);
 
 			responseBuilder.setData(learningObject);
 			responseBuilder.setCode(HttpStatus.OK.value());

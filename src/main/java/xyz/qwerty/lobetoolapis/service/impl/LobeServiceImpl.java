@@ -79,7 +79,7 @@ public class LobeServiceImpl implements LobeService {
 
 	@Autowired
 	LobeScoresRepository lobeScoresRepository;
-	
+
 	@Autowired
 	LobeTempRepository lobeTempRepository;
 
@@ -124,8 +124,8 @@ public class LobeServiceImpl implements LobeService {
 	}
 
 	@Override
-	public LearningObjectVo assignLearningObject(String userId, Integer rubrikId, String msgSubject,
-			String msgBody, String learningObjects, String evaluatorEmail) {
+	public LearningObjectVo assignLearningObject(String userId, Integer rubrikId, String msgSubject, String msgBody,
+			String learningObjects, String evaluatorEmail) {
 
 		Optional<Rubrik> result = rubrikRepository.findById(rubrikId);
 		if (result.isPresent()) {
@@ -139,11 +139,12 @@ public class LobeServiceImpl implements LobeService {
 			}
 
 			String code = UUID.randomUUID().toString();
-			
-			List<String> lobes = Arrays.asList(learningObjects.split(",")).stream().map(String::trim).distinct().collect(Collectors.toList());
-			
-				lobes.forEach(lobeName -> {
-				
+
+			List<String> lobes = Arrays.asList(learningObjects.split(",")).stream().map(String::trim).distinct()
+					.collect(Collectors.toList());
+
+			lobes.forEach(lobeName -> {
+
 				LobeTemp lobeTemp = new LobeTemp();
 				lobeTemp.setAssignedBy(userId);
 				lobeTemp.setAssignedTo(evaluatorEmail);
@@ -151,19 +152,21 @@ public class LobeServiceImpl implements LobeService {
 				lobeTemp.setCreatedTs(LocalDateTime.now());
 				lobeTemp.setLearningObjectName(lobeName.trim());
 				lobeTemp.setRubrikId(rubrikId);
-				
+				lobeTemp.setRubrikName(rubrik.getName());
+				lobeTemp.setStatus(Constants.STATUS_ASSIGNED);
+
 				lobeTempRepository.save(lobeTemp);
 			});
 
 			ExecutorService executorService = Executors.newFixedThreadPool(1);
-			
+
 			StringBuilder sb = new StringBuilder();
 			sb.append(msgSubject);
 			sb.append("\n");
-			sb.append("code: "+code);
+			sb.append("code: " + code);
 			sb.append("\n");
-			sb.append("learning objects: "+lobes);
-			
+			sb.append("learning objects: " + lobes);
+
 			System.out.println(sb.toString());
 
 			executorService.execute(new Runnable() {
@@ -195,8 +198,15 @@ public class LobeServiceImpl implements LobeService {
 
 			Set<LearningObject> learningObjects = type.equals(Constants.TYPE_GENERATOR) ? u.getLearningObject()
 					: u.getLearningObject2();
-
-			return learningObjects.stream().map(l -> getEvalLearningObject(l, type)).collect(Collectors.toList());
+			
+			List<LobeTemp> tempLobes = type.equals(Constants.TYPE_GENERATOR) ? lobeTempRepository.findAllByAssignedBy(u.getEmail()) : lobeTempRepository.findAllByAssignedTo(u.getEmail());
+			
+			List<LearningObjectVo> lobes = tempLobes.stream().map(tl -> getTempEvalLobe(tl)).filter(tl -> tl.getStatus().equals(Constants.STATUS_ASSIGNED)).collect(Collectors.toList());
+			
+			List<LearningObjectVo> learningObjs = learningObjects.stream().map(l -> getEvalLearningObject(l, type)).collect(Collectors.toList());
+			learningObjs.addAll(lobes);
+			
+			return learningObjs;
 		}
 
 		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found");
@@ -204,33 +214,52 @@ public class LobeServiceImpl implements LobeService {
 
 	@Override
 	public LearningObjectVo updateLearningObject(String userId, String code, String grade, String subject,
-			String chapter, String moduleName, String repositoryName) {
+			String chapter, String lobeName, String repositoryName) {
 
-		Optional<LearningObject> learningObject = learningObjectRepository.findById(code);
-		if (learningObject.isPresent()) {
+		Optional<LobeTemp> lobeTempOpt = lobeTempRepository.findByCodeAndLearningObjectName(code, lobeName);
+		if (lobeTempOpt.isPresent()) {
 
-			LearningObject l = learningObject.get();
-			if (!l.getUser2().getEmail().equals(userId)) {
+			LobeTemp lobeTemp = lobeTempOpt.get();
+
+			if (!lobeTemp.getAssignedTo().equals(userId)) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Learning object not assigned to this user");
 			}
-			if (!l.getStatus().equals(Constants.STATUS_ASSIGNED)) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Code already submitted");
+			if (!lobeTemp.getStatus().equals(Constants.STATUS_ASSIGNED)) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Code already submitted for learning object");
 			}
 
-			l.setChapter(chapter);
-			l.setGrade(grade);
-			l.setSubject(subject);
-			l.setModuleName(moduleName);
-			l.setRepositoryName(repositoryName);
-			l.setStatus(Constants.STATUS_INCOMPLETE);
-			l.setUpdatedTs(LocalDateTime.now());
+			Rubrik r = new Rubrik();
+			r.setId(lobeTemp.getRubrikId());
 
-			learningObjectRepository.save(l);
+			User u1 = new User();
+			u1.setEmail(lobeTemp.getAssignedBy());
 
-			return getLearningObjectVo(l);
+			User u2 = new User();
+			u2.setEmail(lobeTemp.getAssignedTo());
+
+			LearningObject learningObject = new LearningObject();
+			learningObject.setChapter(chapter);
+			learningObject.setCode(code);
+			learningObject.setCreatedTs(LocalDateTime.now());
+			learningObject.setGrade(grade);
+			learningObject.setModuleName(lobeName);
+			learningObject.setRepositoryName(repositoryName);
+			learningObject.setRubrik(r);
+			learningObject.setStatus(Constants.STATUS_INCOMPLETE);
+			learningObject.setUpdatedTs(LocalDateTime.now());
+			learningObject.setSubject(subject);
+			learningObject.setUser(u1);
+			learningObject.setUser2(u2);
+
+			learningObjectRepository.save(learningObject);
+
+			lobeTemp.setStatus(Constants.STATUS_INITIATED);
+			lobeTempRepository.save(lobeTemp);
+
+			return getLearningObjectVo(learningObject);
+		} else {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid learning object");
 		}
-
-		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid learning object code");
 	}
 
 	@Override
@@ -352,15 +381,31 @@ public class LobeServiceImpl implements LobeService {
 	private LearningObjectVo getLearningObjectVo(LearningObject learningObject) {
 
 		LearningObjectVo learningObjectVo = new LearningObjectVo();
+		learningObjectVo.setId(learningObject.getId());
 		learningObjectVo.setAssignedBy(learningObject.getUser().getEmail());
 		learningObjectVo.setAssignedTo(learningObject.getUser2().getEmail());
 		learningObjectVo.setCode(learningObject.getCode());
 		learningObjectVo.setCreatedTs(learningObject.getCreatedTs());
 		learningObjectVo.setUpdatedTs(learningObject.getUpdatedTs());
-		learningObjectVo.setName(learningObject.getName());
 		learningObjectVo.setRubrikId(learningObject.getRubrik().getId());
 		learningObjectVo.setStatus(learningObject.getStatus());
+		learningObjectVo.setName(learningObject.getModuleName());
 
+		return learningObjectVo;
+	}
+	
+	private LearningObjectVo getTempEvalLobe(LobeTemp lobeTemp) {
+
+		LearningObjectVo learningObjectVo = new LearningObjectVo();
+		learningObjectVo.setAssignedBy(lobeTemp.getAssignedBy());
+		learningObjectVo.setAssignedTo(lobeTemp.getAssignedTo());
+		learningObjectVo.setCode(lobeTemp.getCode());
+		learningObjectVo.setCreatedTs(lobeTemp.getCreatedTs());
+		learningObjectVo.setRubrikId(lobeTemp.getRubrikId());
+		learningObjectVo.setStatus(lobeTemp.getStatus());
+		learningObjectVo.setName(lobeTemp.getLearningObjectName());
+		learningObjectVo.setRubrikName(lobeTemp.getRubrikName());
+		
 		return learningObjectVo;
 	}
 
