@@ -92,7 +92,7 @@ public class LobeController {
 			@NotNull(message = "Rubrik ID cannot be blank") @RequestParam(name = "rubrikId") Integer rubrikId,
 			@NotBlank(message = "Message title cannot be blank") @RequestParam(name = "msgSubject") String msgSubject,
 			@NotBlank(message = "Message body be blank") @RequestParam(name = "msgBody") String msgBody,
-			@NotNull(message = "LOBE name cannot be blank")@RequestParam(name = "learningObjectName") String learningObjects,
+			@NotBlank(message = "LOBE name cannot be blank")@RequestParam(name = "learningObjectName") String learningObjects,
 			@NotBlank(message = "Email cannot be blank") @Email(message = "Invalid email address") @RequestParam(name = "evaluatorEmail") String evaluatorEmail) {
 
 		ResponseBuilder responseBuilder = new ResponseBuilder();
