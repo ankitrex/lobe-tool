@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 25, 2019 at 11:37 AM
+-- Generation Time: May 26, 2019 at 11:07 AM
 -- Server version: 10.1.38-MariaDB
 -- PHP Version: 7.3.2
 
@@ -29,11 +29,11 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `learning_object` (
+  `id` int(11) NOT NULL,
   `code` varchar(200) NOT NULL,
   `chapter` varchar(100) DEFAULT NULL,
   `created_ts` datetime(6) NOT NULL,
   `grade` varchar(100) DEFAULT NULL,
-  `name` varchar(100) NOT NULL,
   `repository_name` varchar(100) DEFAULT NULL,
   `status` varchar(20) NOT NULL,
   `subject` varchar(100) DEFAULT NULL,
@@ -51,9 +51,9 @@ CREATE TABLE `learning_object` (
 --
 
 CREATE TABLE `lobe_scores` (
-  `score` int(11) NOT NULL,
+  `learning_object_id` int(11) NOT NULL,
   `question_id` int(11) NOT NULL,
-  `learning_object_id` varchar(200) NOT NULL
+  `score` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -69,7 +69,9 @@ CREATE TABLE `lobe_temp` (
   `assigned_to` varchar(200) NOT NULL,
   `rubrik_id` int(100) NOT NULL,
   `learning_object_name` varchar(200) NOT NULL,
-  `created_ts` datetime NOT NULL
+  `created_ts` datetime NOT NULL,
+  `status` varchar(100) NOT NULL,
+  `rubrik_name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -419,7 +421,7 @@ INSERT INTO `user_role` (`user_email`, `role_id`) VALUES
 -- Indexes for table `learning_object`
 --
 ALTER TABLE `learning_object`
-  ADD PRIMARY KEY (`code`),
+  ADD PRIMARY KEY (`id`),
   ADD KEY `FKkna01q2o2cr3ykfb3br0pxvkj` (`rubrik_id`),
   ADD KEY `FK2407ulg8hipch79mwdynftgeq` (`assigned_by`),
   ADD KEY `FKsbv2j6maegp2poc9d5r2xxsr1` (`assigned_to`);
@@ -428,8 +430,8 @@ ALTER TABLE `learning_object`
 -- Indexes for table `lobe_scores`
 --
 ALTER TABLE `lobe_scores`
-  ADD PRIMARY KEY (`question_id`,`learning_object_id`),
-  ADD KEY `FKfg3o9d9xect9bhsyf9ra5hj8k` (`learning_object_id`);
+  ADD PRIMARY KEY (`learning_object_id`,`question_id`),
+  ADD KEY `question_id` (`question_id`);
 
 --
 -- Indexes for table `lobe_temp`
@@ -516,10 +518,16 @@ ALTER TABLE `user_role`
 --
 
 --
+-- AUTO_INCREMENT for table `learning_object`
+--
+ALTER TABLE `learning_object`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
 -- AUTO_INCREMENT for table `lobe_temp`
 --
 ALTER TABLE `lobe_temp`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `quality_dimension_master`
@@ -543,7 +551,7 @@ ALTER TABLE `role`
 -- AUTO_INCREMENT for table `rubrik`
 --
 ALTER TABLE `rubrik`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `rubrik_type_master`
@@ -567,8 +575,8 @@ ALTER TABLE `learning_object`
 -- Constraints for table `lobe_scores`
 --
 ALTER TABLE `lobe_scores`
-  ADD CONSTRAINT `FK5shyltby4fg0qa4y8mcc5brrd` FOREIGN KEY (`question_id`) REFERENCES `question_master` (`id`),
-  ADD CONSTRAINT `FKfg3o9d9xect9bhsyf9ra5hj8k` FOREIGN KEY (`learning_object_id`) REFERENCES `learning_object` (`code`);
+  ADD CONSTRAINT `lobe_scores_ibfk_1` FOREIGN KEY (`learning_object_id`) REFERENCES `learning_object` (`id`),
+  ADD CONSTRAINT `lobe_scores_ibfk_2` FOREIGN KEY (`question_id`) REFERENCES `question_master` (`id`);
 
 --
 -- Constraints for table `question_master`
