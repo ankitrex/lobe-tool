@@ -33,5 +33,5 @@ public class QuestionVo {
 
 	private Integer			dimensionId;
 
-	private Integer			score;
+	private Integer			score;	
 }
