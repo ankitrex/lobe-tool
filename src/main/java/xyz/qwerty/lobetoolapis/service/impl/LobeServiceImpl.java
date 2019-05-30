@@ -54,34 +54,34 @@ import xyz.qwerty.lobetoolapis.vo.RubrikTypeVo;
 public class LobeServiceImpl implements LobeService {
 
 	@Autowired
-	RoleRepository roleRepository;
+	RoleRepository						roleRepository;
 
 	@Autowired
-	QualityDimensionMasterRepository qualityDimensionMasterRepository;
+	QualityDimensionMasterRepository	qualityDimensionMasterRepository;
 
 	@Autowired
-	RubrikTypeMasterRepository rubrikTypeMasterRepository;
+	RubrikTypeMasterRepository			rubrikTypeMasterRepository;
 
 	@Autowired
-	RubrikRepository rubrikRepository;
+	RubrikRepository					rubrikRepository;
 
 	@Autowired
-	LearningObjectRepository learningObjectRepository;
+	LearningObjectRepository			learningObjectRepository;
 
 	@Autowired
-	UserRepository userRepository;
+	UserRepository						userRepository;
 
 	@Autowired
-	JavaMailSender emailSender;
+	JavaMailSender						emailSender;
 
 	@Autowired
-	RubrikService rubrikService;
+	RubrikService						rubrikService;
 
 	@Autowired
-	LobeScoresRepository lobeScoresRepository;
+	LobeScoresRepository				lobeScoresRepository;
 
 	@Autowired
-	LobeTempRepository lobeTempRepository;
+	LobeTempRepository					lobeTempRepository;
 
 	@Override
 	public List<RoleVo> getAllRoles() {
@@ -124,8 +124,7 @@ public class LobeServiceImpl implements LobeService {
 	}
 
 	@Override
-	public LearningObjectVo assignLearningObject(String userId, Integer rubrikId, String msgSubject, String msgBody,
-			String learningObjects, String evaluatorEmail) {
+	public LearningObjectVo assignLearningObject(String userId, Integer rubrikId, String msgSubject, String msgBody, String learningObjects, String evaluatorEmail) {
 
 		Optional<Rubrik> result = rubrikRepository.findById(rubrikId);
 		if (result.isPresent()) {
@@ -140,8 +139,7 @@ public class LobeServiceImpl implements LobeService {
 
 			String code = UUID.randomUUID().toString();
 
-			List<String> lobes = Arrays.asList(learningObjects.split(",")).stream().map(String::trim).distinct()
-					.collect(Collectors.toList());
+			List<String> lobes = Arrays.asList(learningObjects.split(",")).stream().map(String::trim).distinct().collect(Collectors.toList());
 
 			lobes.forEach(lobeName -> {
 
@@ -161,11 +159,16 @@ public class LobeServiceImpl implements LobeService {
 			ExecutorService executorService = Executors.newFixedThreadPool(1);
 
 			StringBuilder sb = new StringBuilder();
-			sb.append(msgSubject);
+			sb.append(msgBody);
 			sb.append("\n");
 			sb.append("code: " + code);
 			sb.append("\n");
-			sb.append("learning objects: " + lobes);
+			sb.append("learning objects: ");
+			sb.append(lobes.stream().collect(Collectors.joining(",")));
+			sb.append("\n");
+			sb.append("Assigned by: " + userId);
+			sb.append("\n\n");
+			sb.append("[THIS IS AN AUTOMATED MESSAGE - PLEASE DO NOT REPLY DIRECTLY TO THIS EMAIL]");
 
 			System.out.println(sb.toString());
 
@@ -173,6 +176,7 @@ public class LobeServiceImpl implements LobeService {
 
 				@Override
 				public void run() {
+
 					SimpleMailMessage message = new SimpleMailMessage();
 					message.setTo(evaluatorEmail);
 					message.setSubject(msgSubject);
@@ -196,16 +200,17 @@ public class LobeServiceImpl implements LobeService {
 
 			User u = user.get();
 
-			Set<LearningObject> learningObjects = type.equals(Constants.TYPE_GENERATOR) ? u.getLearningObject()
-					: u.getLearningObject2();
-			
-			List<LobeTemp> tempLobes = type.equals(Constants.TYPE_GENERATOR) ? lobeTempRepository.findAllByAssignedBy(u.getEmail()) : lobeTempRepository.findAllByAssignedTo(u.getEmail());
-			
-			List<LearningObjectVo> lobes = tempLobes.stream().map(tl -> getTempEvalLobe(tl)).filter(tl -> tl.getStatus().equals(Constants.STATUS_ASSIGNED)).collect(Collectors.toList());
-			
+			Set<LearningObject> learningObjects = type.equals(Constants.TYPE_GENERATOR) ? u.getLearningObject() : u.getLearningObject2();
+
+			List<LobeTemp> tempLobes = type.equals(Constants.TYPE_GENERATOR) ? lobeTempRepository.findAllByAssignedBy(u.getEmail())
+					: lobeTempRepository.findAllByAssignedTo(u.getEmail());
+
+			List<LearningObjectVo> lobes = tempLobes.stream().map(tl -> getTempEvalLobe(tl)).filter(tl -> tl.getStatus().equals(Constants.STATUS_ASSIGNED))
+					.collect(Collectors.toList());
+
 			List<LearningObjectVo> learningObjs = learningObjects.stream().map(l -> getEvalLearningObject(l, type)).collect(Collectors.toList());
 			learningObjs.addAll(lobes);
-			
+
 			return learningObjs;
 		}
 
@@ -213,8 +218,7 @@ public class LobeServiceImpl implements LobeService {
 	}
 
 	@Override
-	public LearningObjectVo updateLearningObject(String userId, String code, String grade, String subject,
-			String chapter, String lobeName, String repositoryName) {
+	public LearningObjectVo updateLearningObject(String userId, String code, String grade, String subject, String chapter, String lobeName, String repositoryName) {
 
 		Optional<LobeTemp> lobeTempOpt = lobeTempRepository.findByCodeAndLearningObjectName(code, lobeName);
 		if (lobeTempOpt.isPresent()) {
@@ -257,7 +261,8 @@ public class LobeServiceImpl implements LobeService {
 			lobeTempRepository.save(lobeTemp);
 
 			return getLearningObjectVo(learningObject);
-		} else {
+		}
+		else {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid learning object");
 		}
 	}
@@ -293,8 +298,7 @@ public class LobeServiceImpl implements LobeService {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Evaluation already submitted");
 			}
 
-			List<Integer> questions = l.getRubrik().getRubrikQuestions().stream()
-					.map(q -> q.getRubrikQuestionsKey().getQuestionMaster().getId()).collect(Collectors.toList());
+			List<Integer> questions = l.getRubrik().getRubrikQuestions().stream().map(q -> q.getRubrikQuestionsKey().getQuestionMaster().getId()).collect(Collectors.toList());
 
 			for (Entry<Integer, Integer> entry : json.entrySet()) {
 
@@ -327,7 +331,8 @@ public class LobeServiceImpl implements LobeService {
 				if (totalQuestions == completedQuestions) {
 					l.setStatus(Constants.STATUS_COMPLETE);
 					learningObjectRepository.save(l);
-				} else {
+				}
+				else {
 					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not all questions have been scored");
 				}
 			}
@@ -366,13 +371,12 @@ public class LobeServiceImpl implements LobeService {
 			dimensionVo.setId(dimension.getId());
 			dimensionVo.setDimensionName(dimension.getDimensionName());
 
-			List<QuestionVo> rubrikQuestions = questions.stream().filter(q -> q.getDimensionId() == dimensionVo.getId())
-					.collect(Collectors.toList());
+			List<QuestionVo> rubrikQuestions = questions.stream().filter(q -> q.getDimensionId() == dimensionVo.getId()).collect(Collectors.toList());
 			dimensionVo.setQuestions(rubrikQuestions);
 
 			dimensionVoList.add(dimensionVo);
 		});
-		
+
 		dimensionVoList.sort((d1, d2) -> d1.getId().compareTo(d2.getId()));
 
 		learningObjectVo.setDimensionVos(dimensionVoList);
@@ -396,7 +400,7 @@ public class LobeServiceImpl implements LobeService {
 
 		return learningObjectVo;
 	}
-	
+
 	private LearningObjectVo getTempEvalLobe(LobeTemp lobeTemp) {
 
 		LearningObjectVo learningObjectVo = new LearningObjectVo();
@@ -408,7 +412,7 @@ public class LobeServiceImpl implements LobeService {
 		learningObjectVo.setStatus(lobeTemp.getStatus());
 		learningObjectVo.setName(lobeTemp.getLearningObjectName());
 		learningObjectVo.setRubrikName(lobeTemp.getRubrikName());
-		
+
 		return learningObjectVo;
 	}
 
