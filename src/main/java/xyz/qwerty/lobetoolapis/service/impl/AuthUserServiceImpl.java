@@ -5,13 +5,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -36,11 +38,21 @@ public class AuthUserServiceImpl implements AuthUserService {
 	@Value("${access.token.expiry.in.seconds}")
 	private Long				accessTokenExpiry;
 
+	@Value("${reset.password.token.expiry.in.seconds}")
+	private Long				resetPasswordTokenExpiry;
+
+	@Value("${frontend.reset.password.url}")
+	private String				resetPasswordUrl;
+
+	@Autowired
+	JavaMailSender				emailSender;
+
 	@Autowired
 	UserRepository				userRepository;
 
-	private static final String	KEY_PERMISSIONS	= "permissions";
-	private static final String	KEY_TOKEN_TYPE	= "tokenType";
+	private static final String	KEY_PERMISSIONS		= "permissions";
+	private static final String	KEY_TOKEN_TYPE		= "tokenType";
+	private static final String	KEY_PASSWORD_HASH	= "pHash";
 
 	@Override
 	public Boolean validateUserCredentials(String email, String password) {
@@ -128,12 +140,89 @@ public class AuthUserServiceImpl implements AuthUserService {
 
 		return true;
 	}
-	
 
 	@Override
 	public String getRole(String email) {
-		
+
 		return userRepository.findById(email).get().getUserRole().stream().map(ur -> ur.getUserRoleKey().getRole().getName()).limit(1).collect(Collectors.toList()).get(0);
+	}
+
+	@Override
+	public Boolean sendPasswordResetMail(String email) {
+
+		Optional<User> user = userRepository.findById(email);
+		if (user.isPresent()) {
+
+			User u = user.get();
+
+			Claims claims = Jwts.claims().setSubject(u.getEmail());
+			claims.put(KEY_TOKEN_TYPE, Constants.TOKEN_TYPE_PASSWORD_RESET);
+			claims.put(KEY_PASSWORD_HASH, DigestUtils.md5DigestAsHex(u.getPassword().getBytes()));
+
+			long now = System.currentTimeMillis();
+			long expiryTime = now + resetPasswordTokenExpiry * 1000;
+
+			String token = Jwts.builder().setClaims(claims).setIssuer("ankit").setIssuedAt(new Date()).setExpiration(new Date(expiryTime))
+					.signWith(SignatureAlgorithm.HS512, jwtSecretKey).compact();
+
+			StringBuilder sb = new StringBuilder();
+			sb.append("Click on the following link to reset your password");
+			sb.append("\n\n");
+			sb.append(resetPasswordUrl + "token=" + token);
+
+			SimpleMailMessage message = new SimpleMailMessage();
+			message.setTo(email);
+			message.setSubject("LOBE Tool password reset");
+			message.setText(sb.toString());
+			emailSender.send(message);
+
+			return true;
+		}
+		else {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email doesn't exists");
+		}
+	}
+
+	@Override
+	public User checkResetTokenValidity(String token) {
+
+		Claims tokenClaims = getClaimsFromToken(token);
+
+		if (!checkTokenTypeAndExpiry(tokenClaims, Constants.TOKEN_TYPE_PASSWORD_RESET)) {
+
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid token type");
+		}
+
+		String email = tokenClaims.getSubject();
+
+		Optional<User> user = userRepository.findById(email);
+		if (user.isPresent()) {
+
+			User u = user.get();
+
+			String tokenPasswordHash = tokenClaims.get(KEY_PASSWORD_HASH, String.class);
+
+			String passwordHash = DigestUtils.md5DigestAsHex(u.getPassword().getBytes());
+
+			if (passwordHash.equals(tokenPasswordHash)) {
+
+				return u;
+			}
+			else {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password already changed");
+			}
+		}
+		else {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email doesn't exists");
+		}
+	}
+
+	@Override
+	public Boolean resetPassword(User user) {
+
+		userRepository.save(user);
+
+		return true;
 	}
 
 	private List<String> getPermissions(String userId) {

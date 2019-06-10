@@ -1,6 +1,6 @@
 package xyz.qwerty.lobetoolapis.service;
 
-import java.util.List;
+import xyz.qwerty.lobetoolapis.entity.User;
 
 public interface AuthUserService {
 
@@ -17,4 +17,10 @@ public interface AuthUserService {
 	Boolean checkUserAccess(String accessToken, String permission);
 
 	String getRole(String email);
+
+	Boolean sendPasswordResetMail(String email);
+
+	User checkResetTokenValidity(String token);
+
+	Boolean resetPassword(User user);
 }

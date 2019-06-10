@@ -1,7 +1,7 @@
 {
 	"info": {
 		"name": "lobe-tool",
-		"_postman_id": "c579fb05-af79-f0b4-61e4-fc2103449de8",
+		"_postman_id": "c9e38598-4ad9-1e56-2961-91cc2f30a43e",
 		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -549,7 +549,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0aGVhbmtpdGdhanJhQGdtYWlsLmNvbSIsInBlcm1pc3Npb25zIjpbImV2YWx1YXRlX3J1YnJpayIsImV2YWx1YXRvcl9hbmFseXRpY3MiXSwidG9rZW5UeXBlIjoiYWNjZXNzIiwiaXNzIjoiYW5raXQiLCJpYXQiOjE1NTQ4MTI1NTIsImV4cCI6MTU1NDg5ODk1Mn0.N06hRBrK2tEJHM4anrwjKpsaAk9njkgUl3ye17gDftYu7ySWafSdYrfikumKqzrYXWbFN2XRFX8LLIzbQR7Mow"
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0aGVhbmtpdGdhanJhQGdtYWlsLmNvbSIsInBlcm1pc3Npb25zIjpbImV2YWx1YXRlX3J1YnJpayIsImV2YWx1YXRvcl9hbmFseXRpY3MiXSwidG9rZW5UeXBlIjoiYWNjZXNzIiwiaXNzIjoiYW5raXQiLCJpYXQiOjE1NjAxNDkwNzcsImV4cCI6MTU2MDIzNTQ3N30.iwLmCCsrS0L1pO2Gti7UBna2pyd_xFDQejWWa38LKgfxQuJpDEjcLi8GFMWTmWBHyyguvc7nr7JM1Dm5K4GZ4Q"
 					}
 				],
 				"body": {
@@ -582,8 +582,7 @@
 							"equals": true
 						}
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -687,8 +686,7 @@
 							"equals": true
 						}
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -713,13 +711,11 @@
 						{
 							"key": "json",
 							"value": "{\"16\":\"3\",\"17\":\"1\",\"18\":\"0\",\"19\":\"2\",\"20\":\"1\",\"21\":\"3\",\"26\":\"1\",\"29\":\"0\",\"30\":\"2\",\"31\":\"1\",\"32\":\"0\",\"34\":\"2\",\"35\":\"2\",\"36\":\"2\"}",
-							"description": "",
 							"type": "text"
 						},
 						{
 							"key": "submit",
 							"value": "true",
-							"description": "",
 							"type": "text"
 						}
 					]
@@ -735,6 +731,71 @@
 						"api",
 						"lobe",
 						"update-lobe-score"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "forgot password",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "theankitgajra@gmail.com",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/user/forgot-password",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"user",
+						"forgot-password"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "reset password token validation",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0aGVhbmtpdGdhanJhQGdtYWlsLmNvbSIsInRva2VuVHlwZSI6InBhc3N3b3JkX3Jlc2V0IiwicEhhc2giOiI5ZDVkNGFjYjExNWUxYzY4ODc4NTE0OGM5MjYwOTQyNSIsImlzcyI6ImFua2l0IiwiaWF0IjoxNTYwMTY3MTQ2LCJleHAiOjE1NjAyNTM1NDZ9.CqGc3pT-pE0hxO5_8G8ojiUXhBnC1SUnxFhBmtyRvVkQW931nXeng7B0I8wZnl8hgRzNPVqWImY9gt4nQoxfiw",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/user/reset-password-validation",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"user",
+						"reset-password-validation"
 					]
 				},
 				"description": ""
