@@ -161,7 +161,9 @@ public class LobeServiceImpl implements LobeService {
 			StringBuilder sb = new StringBuilder();
 			sb.append(msgBody);
 			sb.append("\n");
-			sb.append("code: " + code);
+			sb.append("Enter this rubrik code once you login:");
+			sb.append("\n");
+			sb.append(code);
 			sb.append("\n");
 			sb.append("learning objects: ");
 			sb.append(lobes.stream().collect(Collectors.joining(",")));

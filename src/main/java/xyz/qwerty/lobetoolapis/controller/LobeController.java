@@ -2,7 +2,6 @@ package xyz.qwerty.lobetoolapis.controller;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -32,14 +31,13 @@ import xyz.qwerty.lobetoolapis.vo.LearningObjectVo;
 public class LobeController {
 
 	@Autowired
-	AuthUserService authUserService;
+	AuthUserService	authUserService;
 
 	@Autowired
-	LobeService lobeService;
+	LobeService		lobeService;
 
 	@GetMapping("/get-dimensions")
-	public ResponseEntity<ResponseBuilder> getAllDimensions(
-			@RequestHeader(name = "Authorization") String authorization) {
+	public ResponseEntity<ResponseBuilder> getAllDimensions(@RequestHeader(name = "Authorization") String authorization) {
 
 		ResponseBuilder responseBuilder = new ResponseBuilder();
 
@@ -54,7 +52,8 @@ public class LobeController {
 			responseBuilder.setStatus(HttpStatus.OK.getReasonPhrase());
 			responseBuilder.setData(lobeService.getAllDimensions());
 
-		} else {
+		}
+		else {
 			responseBuilder.setCode(HttpStatus.UNAUTHORIZED.value());
 			responseBuilder.setStatus(HttpStatus.UNAUTHORIZED.getReasonPhrase());
 		}
@@ -63,8 +62,7 @@ public class LobeController {
 	}
 
 	@GetMapping("/get-rubrik-types")
-	public ResponseEntity<ResponseBuilder> getAllRubrikTypes(
-			@RequestHeader(name = "Authorization") String authorization) {
+	public ResponseEntity<ResponseBuilder> getAllRubrikTypes(@RequestHeader(name = "Authorization") String authorization) {
 
 		ResponseBuilder responseBuilder = new ResponseBuilder();
 
@@ -79,7 +77,8 @@ public class LobeController {
 			responseBuilder.setStatus(HttpStatus.OK.getReasonPhrase());
 			responseBuilder.setData(lobeService.getAllRubrikTypes());
 
-		} else {
+		}
+		else {
 			responseBuilder.setCode(HttpStatus.UNAUTHORIZED.value());
 			responseBuilder.setStatus(HttpStatus.UNAUTHORIZED.getReasonPhrase());
 		}
@@ -89,9 +88,9 @@ public class LobeController {
 
 	@PostMapping("/assign")
 	public ResponseEntity<ResponseBuilder> assignRubrik(@RequestHeader(name = "Authorization") String authorization,
-			@NotNull(message = "Rubrik ID cannot be blank") @RequestParam(name = "rubrikId") Integer rubrikId,
+			@NotNull(message = "Rubrik code has to be generated") @RequestParam(name = "rubrikId") Integer rubrikId,
 			@NotBlank(message = "Message title cannot be blank") @RequestParam(name = "msgSubject") String msgSubject,
-			@NotBlank(message = "Message body be blank") @RequestParam(name = "msgBody") String msgBody,
+			@NotBlank(message = "Message body cannot be blank") @RequestParam(name = "msgBody") String msgBody,
 			@NotBlank(message = "LOBE name cannot be blank") @RequestParam(name = "learningObjectName") String learningObjects,
 			@NotBlank(message = "Email cannot be blank") @Email(message = "Invalid email address") @RequestParam(name = "evaluatorEmail") String evaluatorEmail) {
 
@@ -106,13 +105,13 @@ public class LobeController {
 
 			String userId = authUserService.getUserId(accessToken);
 
-			LearningObjectVo learningObjectVo = lobeService.assignLearningObject(userId, rubrikId, msgSubject, msgBody,
-					learningObjects, evaluatorEmail);
+			LearningObjectVo learningObjectVo = lobeService.assignLearningObject(userId, rubrikId, msgSubject, msgBody, learningObjects, evaluatorEmail);
 
 			responseBuilder.setData(learningObjectVo);
 			responseBuilder.setCode(HttpStatus.OK.value());
 			responseBuilder.setStatus(HttpStatus.OK.getReasonPhrase());
-		} else {
+		}
+		else {
 			responseBuilder.setCode(HttpStatus.UNAUTHORIZED.value());
 			responseBuilder.setStatus(HttpStatus.UNAUTHORIZED.getReasonPhrase());
 		}
@@ -121,8 +120,7 @@ public class LobeController {
 	}
 
 	@GetMapping("/evaluations/all")
-	public ResponseEntity<ResponseBuilder> getAllEvaluations(
-			@RequestHeader(name = "Authorization") String authorization, @RequestParam(name = "type") String type) {
+	public ResponseEntity<ResponseBuilder> getAllEvaluations(@RequestHeader(name = "Authorization") String authorization, @RequestParam(name = "type") String type) {
 
 		ResponseBuilder responseBuilder = new ResponseBuilder();
 
@@ -130,9 +128,11 @@ public class LobeController {
 		String permission;
 		if (Constants.TYPE_GENERATOR.equals(type)) {
 			permission = "generator_analytics";
-		} else if (Constants.TYPE_EVALUATOR.equals(type)) {
+		}
+		else if (Constants.TYPE_EVALUATOR.equals(type)) {
 			permission = "evaluator_analytics";
-		} else {
+		}
+		else {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid type");
 		}
 
@@ -147,7 +147,8 @@ public class LobeController {
 			responseBuilder.setData(learningObjects);
 			responseBuilder.setCode(HttpStatus.OK.value());
 			responseBuilder.setStatus(HttpStatus.OK.getReasonPhrase());
-		} else {
+		}
+		else {
 			responseBuilder.setCode(HttpStatus.UNAUTHORIZED.value());
 			responseBuilder.setStatus(HttpStatus.UNAUTHORIZED.getReasonPhrase());
 		}
@@ -158,9 +159,8 @@ public class LobeController {
 	@PostMapping("/new-review")
 	public ResponseEntity<ResponseBuilder> createNewReview(@RequestHeader(name = "Authorization") String authorization,
 			@NotBlank(message = "Code cannot be blank") @RequestParam(name = "code") String code,
-			@NotBlank(message = "Message title cannot be blank") @RequestParam(name = "grade") String grade,
-			@RequestParam(name = "subject") String subject, @RequestParam(name = "chapter") String chapter,
-			@NotBlank(message = "Learning object name cannot be blank") @RequestParam(name = "lobeName") String lobeName,
+			@NotBlank(message = "Message title cannot be blank") @RequestParam(name = "grade") String grade, @RequestParam(name = "subject") String subject,
+			@RequestParam(name = "chapter") String chapter, @NotBlank(message = "Learning object name cannot be blank") @RequestParam(name = "lobeName") String lobeName,
 			@NotBlank(message = "Repository name cannot be blank") @RequestParam(name = "repositoryName") String repositoryName) {
 
 		ResponseBuilder responseBuilder = new ResponseBuilder();
@@ -174,13 +174,13 @@ public class LobeController {
 
 			String userId = authUserService.getUserId(accessToken);
 
-			LearningObjectVo learningObject = lobeService.updateLearningObject(userId, code, grade, subject, chapter,
-					lobeName, repositoryName);
+			LearningObjectVo learningObject = lobeService.updateLearningObject(userId, code, grade, subject, chapter, lobeName, repositoryName);
 
 			responseBuilder.setData(learningObject);
 			responseBuilder.setCode(HttpStatus.OK.value());
 			responseBuilder.setStatus(HttpStatus.OK.getReasonPhrase());
-		} else {
+		}
+		else {
 			responseBuilder.setCode(HttpStatus.UNAUTHORIZED.value());
 			responseBuilder.setStatus(HttpStatus.UNAUTHORIZED.getReasonPhrase());
 		}
@@ -189,8 +189,7 @@ public class LobeController {
 	}
 
 	@GetMapping("/get-lobe-questions")
-	public ResponseEntity<ResponseBuilder> getLobeQuestions(@RequestHeader(name = "Authorization") String authorization,
-			@RequestParam(name = "lobeId") Integer lobeId) {
+	public ResponseEntity<ResponseBuilder> getLobeQuestions(@RequestHeader(name = "Authorization") String authorization, @RequestParam(name = "lobeId") Integer lobeId) {
 
 		ResponseBuilder responseBuilder = new ResponseBuilder();
 
@@ -209,7 +208,8 @@ public class LobeController {
 			responseBuilder.setStatus(HttpStatus.OK.getReasonPhrase());
 			responseBuilder.setData(learningObjectVo);
 
-		} else {
+		}
+		else {
 			responseBuilder.setCode(HttpStatus.UNAUTHORIZED.value());
 			responseBuilder.setStatus(HttpStatus.UNAUTHORIZED.getReasonPhrase());
 		}
@@ -218,9 +218,8 @@ public class LobeController {
 	}
 
 	@PostMapping("/update-lobe-score")
-	public ResponseEntity<ResponseBuilder> createNewReview(@RequestHeader(name = "Authorization") String authorization,
-			@RequestParam(name = "lobeId") Integer lobeId, @RequestParam(name = "json") Map<Integer, Integer> json,
-			@RequestParam(name = "submit") Boolean submit) {
+	public ResponseEntity<ResponseBuilder> createNewReview(@RequestHeader(name = "Authorization") String authorization, @RequestParam(name = "lobeId") Integer lobeId,
+			@RequestParam(name = "json") Map<Integer, Integer> json, @RequestParam(name = "submit") Boolean submit) {
 
 		ResponseBuilder responseBuilder = new ResponseBuilder();
 
@@ -237,7 +236,8 @@ public class LobeController {
 
 			responseBuilder.setCode(HttpStatus.OK.value());
 			responseBuilder.setStatus(HttpStatus.OK.getReasonPhrase());
-		} else {
+		}
+		else {
 			responseBuilder.setCode(HttpStatus.UNAUTHORIZED.value());
 			responseBuilder.setStatus(HttpStatus.UNAUTHORIZED.getReasonPhrase());
 		}
