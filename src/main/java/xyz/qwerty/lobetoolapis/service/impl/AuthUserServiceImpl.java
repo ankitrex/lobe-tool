@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -170,11 +172,20 @@ public class AuthUserServiceImpl implements AuthUserService {
 			sb.append("\n\n");
 			sb.append(resetPasswordUrl + "token=" + token);
 
-			SimpleMailMessage message = new SimpleMailMessage();
-			message.setTo(email);
-			message.setSubject("LOBE Tool password reset");
-			message.setText(sb.toString());
-			emailSender.send(message);
+			ExecutorService executorService = Executors.newFixedThreadPool(1);
+
+			executorService.execute(new Runnable() {
+
+				@Override
+				public void run() {
+
+					SimpleMailMessage message = new SimpleMailMessage();
+					message.setTo(email);
+					message.setSubject("LOBE Tool password reset");
+					message.setText(sb.toString());
+					emailSender.send(message);
+				}
+			});
 
 			return true;
 		}
