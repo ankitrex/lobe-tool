@@ -69,9 +69,9 @@ public class RubrikServiceImpl implements RubrikService {
 
 	@Value("${optional.question.id}")
 	private Integer						optionalQuestionId;
-	
+
 	@Value("${design.efficacy.dimension.id}")
-	private Integer 					designEfficacyDimensionId;
+	private Integer						designEfficacyDimensionId;
 
 	@Override
 	public RubrikVo createRubrik(String userId, Integer rubrikTypeId, String dimensionIds) {
@@ -79,7 +79,7 @@ public class RubrikServiceImpl implements RubrikService {
 		// check if rubrik type is valid
 		Optional<RubrikTypeMaster> rubrikType = rubrikTypeMasterRepository.findById(rubrikTypeId);
 		if (!rubrikType.isPresent()) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Rubrik Type Id");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Rubric Type Id");
 		}
 
 		// fetch all quality dimensions
@@ -106,8 +106,8 @@ public class RubrikServiceImpl implements RubrikService {
 		else {
 
 			rubrikDimensions = allQualityDimensions;
-			
-			if(!premiumRubrikId.equals(rubrikTypeId)) {
+
+			if (!premiumRubrikId.equals(rubrikTypeId)) {
 				allQualityDimensions.remove(designEfficacyDimensionId);
 			}
 		}
@@ -194,25 +194,25 @@ public class RubrikServiceImpl implements RubrikService {
 
 			Rubrik rubrik = result.get();
 			if (!userId.equals(rubrik.getUser().getEmail())) {
-				throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Rubrik doesn't belong to this user");
+				throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Rubric doesn't belong to this user");
 			}
 
 			return getCompleteRubrikVo(rubrik);
 		}
 
-		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid rubrik id");
+		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid rubric id");
 	}
-	
+
 	@Override
 	public RubrikVo getRubrikDetails(Integer rubrikId) {
-		
+
 		Optional<Rubrik> result = rubrikRepository.findById(rubrikId);
 		if (result.isPresent()) {
 
 			return getCompleteRubrikVo(result.get());
 		}
 
-		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid rubrik id");
+		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid rubric id");
 	}
 
 	@Override

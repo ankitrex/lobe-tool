@@ -19,7 +19,6 @@ import xyz.qwerty.lobetoolapis.service.AuthUserService;
 import xyz.qwerty.lobetoolapis.service.RubrikService;
 import xyz.qwerty.lobetoolapis.util.ResponseBuilder;
 import xyz.qwerty.lobetoolapis.vo.DimensionVo;
-import xyz.qwerty.lobetoolapis.vo.LearningObjectVo;
 import xyz.qwerty.lobetoolapis.vo.RubrikVo;
 
 @RestController
@@ -27,26 +26,25 @@ import xyz.qwerty.lobetoolapis.vo.RubrikVo;
 public class RubrikController {
 
 	@Autowired
-	AuthUserService authUserService;
+	AuthUserService	authUserService;
 
 	@Autowired
-	RubrikService rubrikService;
+	RubrikService	rubrikService;
 
 	@Value("${lite.rubrik.id}")
-	private Integer liteRubrikId;
+	private Integer	liteRubrikId;
 
 	@Value("${premium.rubrik.id}")
-	private Integer premiumRubrikId;
+	private Integer	premiumRubrikId;
 
 	@Value("${lite.sample.id}")
-	private Integer liteSampleId;
+	private Integer	liteSampleId;
 
 	@Value("${premium.sample.id}")
-	private Integer premiumSampleId;
+	private Integer	premiumSampleId;
 
 	@PostMapping("/create-rubrik")
-	public ResponseEntity<ResponseBuilder> createNewrubrik(@RequestHeader(name = "Authorization") String authorization,
-			@RequestParam(name = "rubrikTypeId") Integer rubrikTypeId,
+	public ResponseEntity<ResponseBuilder> createNewrubrik(@RequestHeader(name = "Authorization") String authorization, @RequestParam(name = "rubrikTypeId") Integer rubrikTypeId,
 			@RequestParam(name = "dimensionIds") String dimensionIds) {
 
 		ResponseBuilder responseBuilder = new ResponseBuilder();
@@ -66,7 +64,8 @@ public class RubrikController {
 
 			responseBuilder.setCode(HttpStatus.CREATED.value());
 			responseBuilder.setStatus(HttpStatus.CREATED.getReasonPhrase());
-		} else {
+		}
+		else {
 			responseBuilder.setCode(HttpStatus.UNAUTHORIZED.value());
 			responseBuilder.setStatus(HttpStatus.UNAUTHORIZED.getReasonPhrase());
 		}
@@ -94,7 +93,8 @@ public class RubrikController {
 
 			responseBuilder.setCode(HttpStatus.OK.value());
 			responseBuilder.setStatus(HttpStatus.OK.getReasonPhrase());
-		} else {
+		}
+		else {
 			responseBuilder.setCode(HttpStatus.UNAUTHORIZED.value());
 			responseBuilder.setStatus(HttpStatus.UNAUTHORIZED.getReasonPhrase());
 		}
@@ -103,8 +103,7 @@ public class RubrikController {
 	}
 
 	@GetMapping("/browse/{rubrikTypeId}")
-	public ResponseEntity<ResponseBuilder> browseSampleRubrik(
-			@RequestHeader(name = "Authorization") String authorization,
+	public ResponseEntity<ResponseBuilder> browseSampleRubrik(@RequestHeader(name = "Authorization") String authorization,
 			@PathVariable(name = "rubrikTypeId") Integer rubrikTypeId) {
 
 		ResponseBuilder responseBuilder = new ResponseBuilder();
@@ -121,10 +120,12 @@ public class RubrikController {
 			Integer rubrikId;
 			if (rubrikTypeId == premiumRubrikId) {
 				rubrikId = premiumSampleId;
-			} else if (rubrikTypeId == liteRubrikId) {
+			}
+			else if (rubrikTypeId == liteRubrikId) {
 				rubrikId = liteSampleId;
-			} else {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid rubrik type id");
+			}
+			else {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid rubric type id");
 			}
 
 			RubrikVo rubrik = rubrikService.getRubrikDetails(rubrikId);
@@ -133,7 +134,8 @@ public class RubrikController {
 
 			responseBuilder.setCode(HttpStatus.OK.value());
 			responseBuilder.setStatus(HttpStatus.OK.getReasonPhrase());
-		} else {
+		}
+		else {
 			responseBuilder.setCode(HttpStatus.UNAUTHORIZED.value());
 			responseBuilder.setStatus(HttpStatus.UNAUTHORIZED.getReasonPhrase());
 		}
@@ -142,8 +144,7 @@ public class RubrikController {
 	}
 
 	@GetMapping("/{rubrikId}")
-	public ResponseEntity<ResponseBuilder> getRubrikDetails(@RequestHeader(name = "Authorization") String authorization,
-			@PathVariable(name = "rubrikId") Integer rubrikId) {
+	public ResponseEntity<ResponseBuilder> getRubrikDetails(@RequestHeader(name = "Authorization") String authorization, @PathVariable(name = "rubrikId") Integer rubrikId) {
 
 		ResponseBuilder responseBuilder = new ResponseBuilder();
 
@@ -162,7 +163,8 @@ public class RubrikController {
 
 			responseBuilder.setCode(HttpStatus.OK.value());
 			responseBuilder.setStatus(HttpStatus.OK.getReasonPhrase());
-		} else {
+		}
+		else {
 			responseBuilder.setCode(HttpStatus.UNAUTHORIZED.value());
 			responseBuilder.setStatus(HttpStatus.UNAUTHORIZED.getReasonPhrase());
 		}
@@ -171,9 +173,8 @@ public class RubrikController {
 	}
 
 	@GetMapping("/questions")
-	public ResponseEntity<ResponseBuilder> getDimensionQuestions(
-			@RequestHeader(name = "Authorization") String authorization,
-			@RequestParam("dimensionId") Integer dimensionId, @RequestParam("rubrikTypeId") Integer rubrikTypeId) {
+	public ResponseEntity<ResponseBuilder> getDimensionQuestions(@RequestHeader(name = "Authorization") String authorization, @RequestParam("dimensionId") Integer dimensionId,
+			@RequestParam("rubrikTypeId") Integer rubrikTypeId) {
 
 		ResponseBuilder responseBuilder = new ResponseBuilder();
 
@@ -188,7 +189,8 @@ public class RubrikController {
 			responseBuilder.setCode(HttpStatus.OK.value());
 			responseBuilder.setStatus(HttpStatus.OK.getReasonPhrase());
 			responseBuilder.setData(dimensionVo);
-		} else {
+		}
+		else {
 			responseBuilder.setCode(HttpStatus.UNAUTHORIZED.value());
 			responseBuilder.setStatus(HttpStatus.UNAUTHORIZED.getReasonPhrase());
 		}
@@ -197,9 +199,8 @@ public class RubrikController {
 	}
 
 	@PostMapping("/{rubrikId}/update")
-	public ResponseEntity<ResponseBuilder> updateRubrik(@RequestHeader(name = "Authorization") String authorization,
-			@PathVariable(name = "rubrikId") Integer rubrikId, @RequestParam(name = "add") List<Integer> addQuestionIds,
-			@RequestParam(name = "remove") List<Integer> removeQuestionIds,
+	public ResponseEntity<ResponseBuilder> updateRubrik(@RequestHeader(name = "Authorization") String authorization, @PathVariable(name = "rubrikId") Integer rubrikId,
+			@RequestParam(name = "add") List<Integer> addQuestionIds, @RequestParam(name = "remove") List<Integer> removeQuestionIds,
 			@RequestParam(name = "submit") Boolean submit) {
 
 		ResponseBuilder responseBuilder = new ResponseBuilder();
@@ -213,13 +214,13 @@ public class RubrikController {
 
 			String userId = authUserService.getUserId(accessToken);
 
-			RubrikVo rubrikVo = rubrikService.updateQuestionsAndSubmit(rubrikId, userId, addQuestionIds,
-					removeQuestionIds, submit);
+			RubrikVo rubrikVo = rubrikService.updateQuestionsAndSubmit(rubrikId, userId, addQuestionIds, removeQuestionIds, submit);
 
 			responseBuilder.setData(rubrikVo);
 			responseBuilder.setCode(HttpStatus.OK.value());
 			responseBuilder.setStatus(HttpStatus.OK.getReasonPhrase());
-		} else {
+		}
+		else {
 			responseBuilder.setCode(HttpStatus.UNAUTHORIZED.value());
 			responseBuilder.setStatus(HttpStatus.UNAUTHORIZED.getReasonPhrase());
 		}

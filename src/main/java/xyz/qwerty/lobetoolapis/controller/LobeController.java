@@ -88,7 +88,7 @@ public class LobeController {
 
 	@PostMapping("/assign")
 	public ResponseEntity<ResponseBuilder> assignRubrik(@RequestHeader(name = "Authorization") String authorization,
-			@NotNull(message = "Rubrik code has to be generated") @RequestParam(name = "rubrikId") Integer rubrikId,
+			@NotNull(message = "Rubric code has to be generated") @RequestParam(name = "rubrikId") Integer rubrikId,
 			@NotBlank(message = "Message title cannot be blank") @RequestParam(name = "msgSubject") String msgSubject,
 			@NotBlank(message = "Message body cannot be blank") @RequestParam(name = "msgBody") String msgBody,
 			@NotBlank(message = "LOBE name cannot be blank") @RequestParam(name = "learningObjectName") String learningObjects,
