@@ -170,7 +170,7 @@ public class AuthUserServiceImpl implements AuthUserService {
 			StringBuilder sb = new StringBuilder();
 			sb.append("Click on the following link to reset your password");
 			sb.append("\n\n");
-			sb.append(resetPasswordUrl + "token=" + token);
+			sb.append(resetPasswordUrl + "?token=" + token);
 
 			ExecutorService executorService = Executors.newFixedThreadPool(1);
 
