@@ -202,7 +202,7 @@ public class LobeController {
 
 			String userId = authUserService.getUserId(accessToken);
 
-			LearningObjectVo learningObjectVo = lobeService.getLobeRubrik(userId, lobeId);
+			LearningObjectVo learningObjectVo = lobeService.getLobeRubrik(userId, lobeId, false);
 
 			responseBuilder.setCode(HttpStatus.OK.value());
 			responseBuilder.setStatus(HttpStatus.OK.getReasonPhrase());

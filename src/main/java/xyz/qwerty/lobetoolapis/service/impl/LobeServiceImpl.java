@@ -270,14 +270,16 @@ public class LobeServiceImpl implements LobeService {
 	}
 
 	@Override
-	public LearningObjectVo getLobeRubrik(String userId, Integer lobeId) {
+	public LearningObjectVo getLobeRubrik(String userId, Integer lobeId, Boolean generator) {
 
 		Optional<LearningObject> learningObject = learningObjectRepository.findById(lobeId);
 		if (learningObject.isPresent()) {
 
 			LearningObject l = learningObject.get();
-			if (!l.getUser2().getEmail().equals(userId)) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Learning object not assigned to this user");
+			if (!generator) {
+				if (!l.getUser2().getEmail().equals(userId)) {
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Learning object not assigned to this user");
+				}
 			}
 
 			return getQuestionsLearningObjectVo(l);
