@@ -19,6 +19,7 @@ import xyz.qwerty.lobetoolapis.util.Constants;
 import xyz.qwerty.lobetoolapis.util.ResponseBuilder;
 import xyz.qwerty.lobetoolapis.vo.LearningObjectVo;
 import xyz.qwerty.lobetoolapis.vo.LobeSummaryVo;
+import xyz.qwerty.lobetoolapis.vo.StrengthWeaknessAnalysisVo;
 
 @RestController
 @RequestMapping("/api/analytics")
@@ -83,6 +84,34 @@ public class AnalyticsController {
 			String userId = authUserService.getUserId(accessToken);
 
 			List<LobeSummaryVo> lobeSummary = analyticsService.getLobeSummary(lobeIds, userId);
+
+			responseBuilder.setData(lobeSummary);
+			responseBuilder.setCode(HttpStatus.OK.value());
+			responseBuilder.setStatus(HttpStatus.OK.getReasonPhrase());
+		}
+		else {
+			responseBuilder.setCode(HttpStatus.UNAUTHORIZED.value());
+			responseBuilder.setStatus(HttpStatus.UNAUTHORIZED.getReasonPhrase());
+		}
+
+		return new ResponseEntity<>(responseBuilder, HttpStatus.OK);
+	}
+
+	@GetMapping("/strength-weakness")
+	public ResponseEntity<ResponseBuilder> getStrengthWeaknessAnalysis(@RequestHeader(name = "Authorization") String authorization,
+			@RequestParam(name = "lobeIds") List<Integer> lobeIds) {
+
+		ResponseBuilder responseBuilder = new ResponseBuilder();
+
+		String accessToken = authUserService.getAccessTokenFromHeader(authorization);
+
+		Boolean hasPermission = authUserService.checkUserAccess(accessToken, "generator_analytics") || authUserService.checkUserAccess(accessToken, "evaluator_analytics");
+
+		if (hasPermission) {
+
+			String userId = authUserService.getUserId(accessToken);
+
+			List<StrengthWeaknessAnalysisVo> lobeSummary = analyticsService.getStrengthWeaknessAnalysis(lobeIds, userId);
 
 			responseBuilder.setData(lobeSummary);
 			responseBuilder.setCode(HttpStatus.OK.value());

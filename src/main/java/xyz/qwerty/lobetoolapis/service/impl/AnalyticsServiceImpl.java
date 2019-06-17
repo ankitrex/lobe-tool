@@ -17,6 +17,7 @@ import xyz.qwerty.lobetoolapis.vo.DimensionAggScoreVo;
 import xyz.qwerty.lobetoolapis.vo.DimensionVo;
 import xyz.qwerty.lobetoolapis.vo.LearningObjectVo;
 import xyz.qwerty.lobetoolapis.vo.LobeSummaryVo;
+import xyz.qwerty.lobetoolapis.vo.StrengthWeaknessAnalysisVo;
 
 @Service
 public class AnalyticsServiceImpl implements AnalyticsService {
@@ -89,6 +90,12 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 		});
 
 		return lobeSummaries;
+	}
+
+	@Override
+	public List<StrengthWeaknessAnalysisVo> getStrengthWeaknessAnalysis(List<Integer> lobeIds, String userId) {
+
+		return null;
 	}
 
 }
