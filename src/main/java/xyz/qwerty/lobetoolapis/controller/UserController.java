@@ -38,10 +38,11 @@ public class UserController {
 	AuthUserService	authUserService;
 
 	@PostMapping("/register")
-	public ResponseEntity<ResponseBuilder> register(@Email(message = "Invalid email address") @RequestParam(name = "email") String email,
+	public ResponseEntity<ResponseBuilder> register(@NotBlank @Email(message = "Invalid email address") @RequestParam(name = "email") String email,
 			@NotBlank(message = "Name cannot be blank") @RequestParam(name = "name") String name,
 			@NotBlank(message = "Password cannot be blank") @RequestParam(name = "password") String password,
-			@NotBlank(message = "Affiliation cannot be blank") @RequestParam(name = "affiliation") String affiliation, @NotNull(message = "Choose Role. Role cannot be blank") Integer roleId) {
+			@NotBlank(message = "Affiliation cannot be blank") @RequestParam(name = "affiliation") String affiliation,
+			@NotNull(message = "Choose Role. Role cannot be blank") Integer roleId) {
 
 		User user = new User();
 		user.setEmail(email);
