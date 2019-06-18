@@ -131,10 +131,10 @@ public class LobeServiceImpl implements LobeService {
 
 			Rubrik rubrik = result.get();
 			if (!userId.equals(rubrik.getUser().getEmail())) {
-				throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Rubrik doesn't belong to this user");
+				throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Rubric doesn't belong to this user");
 			}
 			if (Constants.STATUS_INCOMPLETE.equals(rubrik.getStatus())) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Incomplete rubrik can't be assigned");
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Incomplete rubric can't be assigned");
 			}
 
 			String code = UUID.randomUUID().toString();
@@ -161,7 +161,7 @@ public class LobeServiceImpl implements LobeService {
 			StringBuilder sb = new StringBuilder();
 			sb.append(msgBody);
 			sb.append("\n");
-			sb.append("Enter this rubrik code once you login:");
+			sb.append("Enter this rubric code once you login:");
 			sb.append("\n");
 			sb.append(code);
 			sb.append("\n");
