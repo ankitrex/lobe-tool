@@ -99,7 +99,7 @@
 					]
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/user/login?email=theankitgajra@gmail.com&password=qwerty",
+					"raw": "http://localhost:8080/api/user/login?email=theankitgajra@gmail.com&password=qwertyu",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -118,7 +118,7 @@
 						},
 						{
 							"key": "password",
-							"value": "qwerty",
+							"value": "qwertyu",
 							"equals": true
 						}
 					]
@@ -291,7 +291,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmtpdHhAZ21haWwuY29tIiwicGVybWlzc2lvbnMiOlsiZ2VuZXJhdG9yX2FuYWx5dGljcyIsImNyZWF0ZV9ydWJyaWsiLCJhc3NpZ25fcnVicmlrIl0sInRva2VuVHlwZSI6ImFjY2VzcyIsImlzcyI6ImFua2l0IiwiaWF0IjoxNTU0ODExNzc2LCJleHAiOjE1NTQ4OTgxNzZ9.7Bgfr6sNLTlO8zlFzcFxiPp1RoiuG4Oy9JVThrTm5p1JpM230g1-ziI375mPnCprvbbiV5JzOejxlZ93wlrcTw"
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmtpdHhAZ21haWwuY29tIiwicGVybWlzc2lvbnMiOlsiYXNzaWduX3J1YnJpayIsImNyZWF0ZV9ydWJyaWsiLCJnZW5lcmF0b3JfYW5hbHl0aWNzIl0sInRva2VuVHlwZSI6ImFjY2VzcyIsImlzcyI6ImFua2l0IiwiaWF0IjoxNTYwNzY1MTAyLCJleHAiOjE1NjA4NTE1MDJ9.Ya_qBAzjO9oLVkg_QfnnuyPQKh0w6ETdTnRuzmpP749JepkA2zTzF9ney-cTyNdgcb1hM6H4iTReblONBN41Yg"
 					}
 				],
 				"body": {
@@ -796,6 +796,125 @@
 						"api",
 						"user",
 						"reset-password-validation"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "analytics all lobes by rubrik id",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmtpdHhAZ21haWwuY29tIiwicGVybWlzc2lvbnMiOlsiY3JlYXRlX3J1YnJpayIsImdlbmVyYXRvcl9hbmFseXRpY3MiLCJhc3NpZ25fcnVicmlrIl0sInRva2VuVHlwZSI6ImFjY2VzcyIsImlzcyI6ImFua2l0IiwiaWF0IjoxNTYwOTUxNzM2LCJleHAiOjE1NjEwMzgxMzZ9.lbjD-5x1yZJBsSs_YZ25FhL7923tFBnj8j7n81dmAFSX9I4y-Na0trRGnR-JYK03MJR7BjYZ_znt87l55Q_8Xg"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "code",
+							"value": "LOBE_CUSTOM_16_TESTX-9b525e38-150c-410f-bf1a-d6cb0167f76c",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/analytics/all-lobes?rubrikId=4&type=generator",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"analytics",
+						"all-lobes"
+					],
+					"query": [
+						{
+							"key": "rubrikId",
+							"value": "4",
+							"equals": true
+						},
+						{
+							"key": "type",
+							"value": "generator",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "lobe summary",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmtpdHhAZ21haWwuY29tIiwicGVybWlzc2lvbnMiOlsiY3JlYXRlX3J1YnJpayIsImdlbmVyYXRvcl9hbmFseXRpY3MiLCJhc3NpZ25fcnVicmlrIl0sInRva2VuVHlwZSI6ImFjY2VzcyIsImlzcyI6ImFua2l0IiwiaWF0IjoxNTYwOTUxNzM2LCJleHAiOjE1NjEwMzgxMzZ9.lbjD-5x1yZJBsSs_YZ25FhL7923tFBnj8j7n81dmAFSX9I4y-Na0trRGnR-JYK03MJR7BjYZ_znt87l55Q_8Xg"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/api/analytics/lobe-summary?lobeIds=1,2,4",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"analytics",
+						"lobe-summary"
+					],
+					"query": [
+						{
+							"key": "lobeIds",
+							"value": "1,2,4",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "strength weakness",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmtpdHhAZ21haWwuY29tIiwicGVybWlzc2lvbnMiOlsiY3JlYXRlX3J1YnJpayIsImdlbmVyYXRvcl9hbmFseXRpY3MiLCJhc3NpZ25fcnVicmlrIl0sInRva2VuVHlwZSI6ImFjY2VzcyIsImlzcyI6ImFua2l0IiwiaWF0IjoxNTYwOTUxNzM2LCJleHAiOjE1NjEwMzgxMzZ9.lbjD-5x1yZJBsSs_YZ25FhL7923tFBnj8j7n81dmAFSX9I4y-Na0trRGnR-JYK03MJR7BjYZ_znt87l55Q_8Xg"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/api/analytics/strength-weakness?lobeIds=1,2,4",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"analytics",
+						"strength-weakness"
+					],
+					"query": [
+						{
+							"key": "lobeIds",
+							"value": "1,2,4",
+							"equals": true
+						}
 					]
 				},
 				"description": ""
