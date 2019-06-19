@@ -14,4 +14,6 @@ public class SwQuestionVo {
 	private Double	score2;
 
 	private Double	score3;
+
+	private Integer	dimensionId;
 }
