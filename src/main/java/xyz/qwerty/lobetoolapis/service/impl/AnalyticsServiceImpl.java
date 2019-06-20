@@ -102,114 +102,9 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 	@Override
 	public List<StrengthWeaknessAnalysisVo> getStrengthWeaknessAnalysis(List<Integer> lobeIds, String userId) {
 
-		List<StrengthWeaknessAnalysisVo> analysis = new ArrayList<>();
-
-		StrengthWeaknessAnalysisVo green = new StrengthWeaknessAnalysisVo();
-		green.setZone("green");
-
-		SwDimensionVo greenSwDimension1 = new SwDimensionVo();
-		greenSwDimension1.setSwQuestions(new ArrayList<>());
-		greenSwDimension1.setDimensionId(1);
-		greenSwDimension1.setDimensionName("Content Quality");
-
-		SwDimensionVo greenSwDimension2 = new SwDimensionVo();
-		greenSwDimension2.setSwQuestions(new ArrayList<>());
-		greenSwDimension2.setDimensionId(2);
-		greenSwDimension2.setDimensionName("Pedagogical Alignment");
-
-		SwDimensionVo greenSwDimension3 = new SwDimensionVo();
-		greenSwDimension3.setSwQuestions(new ArrayList<>());
-		greenSwDimension3.setDimensionId(3);
-		greenSwDimension3.setDimensionName("Design Efficacy");
-
-		SwDimensionVo greenSwDimension4 = new SwDimensionVo();
-		greenSwDimension4.setSwQuestions(new ArrayList<>());
-		greenSwDimension4.setDimensionId(4);
-		greenSwDimension4.setDimensionName("Technological Integration");
-
-		green.setSwDimensions(Arrays.asList(greenSwDimension1, greenSwDimension2, greenSwDimension3, greenSwDimension4));
-
-		StrengthWeaknessAnalysisVo yellow = new StrengthWeaknessAnalysisVo();
-		yellow.setZone("yellow");
-
-		SwDimensionVo yellowSwDimension1 = new SwDimensionVo();
-		yellowSwDimension1.setSwQuestions(new ArrayList<>());
-		yellowSwDimension1.setDimensionId(1);
-		yellowSwDimension1.setDimensionName("Content Quality");
-
-		SwDimensionVo yellowSwDimension2 = new SwDimensionVo();
-		yellowSwDimension2.setSwQuestions(new ArrayList<>());
-		yellowSwDimension2.setDimensionId(2);
-		yellowSwDimension2.setDimensionName("Pedagogical Alignment");
-
-		SwDimensionVo yellowSwDimension3 = new SwDimensionVo();
-		yellowSwDimension3.setSwQuestions(new ArrayList<>());
-		yellowSwDimension3.setDimensionId(3);
-		yellowSwDimension3.setDimensionName("Design Efficacy");
-
-		SwDimensionVo yellowSwDimension4 = new SwDimensionVo();
-		yellowSwDimension4.setSwQuestions(new ArrayList<>());
-		yellowSwDimension4.setDimensionId(4);
-		yellowSwDimension4.setDimensionName("Technological Integration");
-
-		yellow.setSwDimensions(Arrays.asList(yellowSwDimension1, yellowSwDimension2, yellowSwDimension3, yellowSwDimension4));
-
-		StrengthWeaknessAnalysisVo orange = new StrengthWeaknessAnalysisVo();
-		orange.setZone("orange");
-
-		SwDimensionVo orangeSwDimension1 = new SwDimensionVo();
-		orangeSwDimension1.setSwQuestions(new ArrayList<>());
-		orangeSwDimension1.setDimensionId(1);
-		orangeSwDimension1.setDimensionName("Content Quality");
-
-		SwDimensionVo orangeSwDimension2 = new SwDimensionVo();
-		orangeSwDimension2.setSwQuestions(new ArrayList<>());
-		orangeSwDimension2.setDimensionId(2);
-		orangeSwDimension2.setDimensionName("Pedagogical Alignment");
-
-		SwDimensionVo orangeSwDimension3 = new SwDimensionVo();
-		orangeSwDimension3.setSwQuestions(new ArrayList<>());
-		orangeSwDimension3.setDimensionId(3);
-		orangeSwDimension3.setDimensionName("Design Efficacy");
-
-		SwDimensionVo orangeSwDimension4 = new SwDimensionVo();
-		orangeSwDimension4.setSwQuestions(new ArrayList<>());
-		orangeSwDimension4.setDimensionId(4);
-		orangeSwDimension4.setDimensionName("Technological Integration");
-
-		orange.setSwDimensions(Arrays.asList(orangeSwDimension1, orangeSwDimension2, orangeSwDimension3, orangeSwDimension4));
-
-		StrengthWeaknessAnalysisVo red = new StrengthWeaknessAnalysisVo();
-		red.setZone("red");
-
-		SwDimensionVo redSwDimension1 = new SwDimensionVo();
-		redSwDimension1.setSwQuestions(new ArrayList<>());
-		redSwDimension1.setDimensionId(1);
-		redSwDimension1.setDimensionName("Content Quality");
-
-		SwDimensionVo redSwDimension2 = new SwDimensionVo();
-		redSwDimension2.setSwQuestions(new ArrayList<>());
-		redSwDimension2.setDimensionId(2);
-		redSwDimension2.setDimensionName("Pedagogical Alignment");
-
-		SwDimensionVo redSwDimension3 = new SwDimensionVo();
-		redSwDimension3.setSwQuestions(new ArrayList<>());
-		redSwDimension3.setDimensionId(3);
-		redSwDimension3.setDimensionName("Design Efficacy");
-
-		SwDimensionVo redSwDimension4 = new SwDimensionVo();
-		redSwDimension4.setSwQuestions(new ArrayList<>());
-		redSwDimension4.setDimensionId(4);
-		redSwDimension4.setDimensionName("Technological Integration");
-
-		red.setSwDimensions(Arrays.asList(redSwDimension1, redSwDimension2, redSwDimension3, redSwDimension4));
-
-		analysis.add(green);
-		analysis.add(yellow);
-		analysis.add(orange);
-		analysis.add(red);
-
 		List<LearningObjectVo> learningObjects = new ArrayList<>();
+
+		List<StrengthWeaknessAnalysisVo> analysis = getInitializedAnalysisVo();
 
 		lobeIds.forEach(lobeId -> {
 			learningObjects.add(lobeService.getLobeRubrik(userId, lobeId, true));
@@ -237,124 +132,155 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 			swQuestionAgg.setScore2(score2);
 			swQuestionAgg.setScore3(score3);
 
-			Boolean c0 = score1 + score2 == 0 && score0 == 0;
-			Boolean c1 = score1 + score2 > score0;
-			Boolean c2 = score1 + score2 < score0;
+			int zoneIndex;
+			int dimensionIndex;
+
+			if (swQuestionAgg.getDimensionId() == 1) {
+				dimensionIndex = 0;
+			}
+			else if (swQuestionAgg.getDimensionId() == 2) {
+				dimensionIndex = 1;
+			}
+			else if (swQuestionAgg.getDimensionId() == 3) {
+				dimensionIndex = 2;
+			}
+			else {
+				dimensionIndex = 3;
+			}
+
+			Boolean c0 = score2 + score1 == 0 && score0 == 0;
+			Boolean c1 = score2 + score1 > score0 && score2 > score1;
+			Boolean c2 = score2 + score1 > score0 && score2 <= score1;
+			Boolean c3 = score2 + score1 == score0;
+			Boolean c4 = score2 + score1 < score0;
 
 			if (score3 > 75) {
 				if (c0 || c1) {
+					zoneIndex = 0;
 					// green
-					if (swQuestionAgg.getDimensionId() == 1) {
-						greenSwDimension1.getSwQuestions().add(swQuestionAgg);
-					}
-					else if (swQuestionAgg.getDimensionId() == 2) {
-						greenSwDimension2.getSwQuestions().add(swQuestionAgg);
-					}
-					else if (swQuestionAgg.getDimensionId() == 3) {
-						greenSwDimension3.getSwQuestions().add(swQuestionAgg);
-					}
-					else if (swQuestionAgg.getDimensionId() == 4) {
-						greenSwDimension4.getSwQuestions().add(swQuestionAgg);
-					}
 				}
 				else if (c2) {
+					zoneIndex = 1;
+					// teal
+				}
+				else if (c3) {
+					zoneIndex = 2;
 					// yellow
-					if (swQuestionAgg.getDimensionId() == 1) {
-						yellowSwDimension1.getSwQuestions().add(swQuestionAgg);
-					}
-					else if (swQuestionAgg.getDimensionId() == 2) {
-						yellowSwDimension2.getSwQuestions().add(swQuestionAgg);
-					}
-					else if (swQuestionAgg.getDimensionId() == 3) {
-						yellowSwDimension3.getSwQuestions().add(swQuestionAgg);
-					}
-					else if (swQuestionAgg.getDimensionId() == 4) {
-						yellowSwDimension4.getSwQuestions().add(swQuestionAgg);
-					}
 				}
 				else {
+					zoneIndex = 3;
 					// orange
-					if (swQuestionAgg.getDimensionId() == 1) {
-						orangeSwDimension1.getSwQuestions().add(swQuestionAgg);
-					}
-					else if (swQuestionAgg.getDimensionId() == 2) {
-						orangeSwDimension2.getSwQuestions().add(swQuestionAgg);
-					}
-					else if (swQuestionAgg.getDimensionId() == 3) {
-						orangeSwDimension3.getSwQuestions().add(swQuestionAgg);
-					}
-					else if (swQuestionAgg.getDimensionId() == 4) {
-						orangeSwDimension4.getSwQuestions().add(swQuestionAgg);
-					}
 				}
 			}
-			else if (score3 <= 75 && score3 >= 25) {
+			else if (score3 <= 75 && score3 >= 50) {
 				if (c1) {
+					zoneIndex = 1;
+					// teal
+				}
+				else if (c2 || c3) {
+					zoneIndex = 2;
 					// yellow
-					if (swQuestionAgg.getDimensionId() == 1) {
-						yellowSwDimension1.getSwQuestions().add(swQuestionAgg);
-					}
-					else if (swQuestionAgg.getDimensionId() == 2) {
-						yellowSwDimension2.getSwQuestions().add(swQuestionAgg);
-					}
-					else if (swQuestionAgg.getDimensionId() == 3) {
-						yellowSwDimension3.getSwQuestions().add(swQuestionAgg);
-					}
-					else if (swQuestionAgg.getDimensionId() == 4) {
-						yellowSwDimension4.getSwQuestions().add(swQuestionAgg);
-					}
 				}
 				else {
+					zoneIndex = 3;
 					// orange
-					if (swQuestionAgg.getDimensionId() == 1) {
-						orangeSwDimension1.getSwQuestions().add(swQuestionAgg);
-					}
-					else if (swQuestionAgg.getDimensionId() == 2) {
-						orangeSwDimension2.getSwQuestions().add(swQuestionAgg);
-					}
-					else if (swQuestionAgg.getDimensionId() == 3) {
-						orangeSwDimension3.getSwQuestions().add(swQuestionAgg);
-					}
-					else if (swQuestionAgg.getDimensionId() == 4) {
-						orangeSwDimension4.getSwQuestions().add(swQuestionAgg);
-					}
+				}
+			}
+			else if (score3 < 50 && score3 >= 25) {
+				if (c1) {
+					zoneIndex = 2;
+					// yellow
+				}
+				else if (c2 || c3) {
+					zoneIndex = 3;
+					// orange
+				}
+				else {
+					zoneIndex = 4;
+					// red
 				}
 			}
 			else {
 				if (c1) {
+					zoneIndex = 1;
+					// teal
+				}
+				else if (c2) {
+					zoneIndex = 2;
+					// yellow
+				}
+				else if (c3) {
+					zoneIndex = 3;
 					// orange
-					if (swQuestionAgg.getDimensionId() == 1) {
-						orangeSwDimension1.getSwQuestions().add(swQuestionAgg);
-					}
-					else if (swQuestionAgg.getDimensionId() == 2) {
-						orangeSwDimension2.getSwQuestions().add(swQuestionAgg);
-					}
-					else if (swQuestionAgg.getDimensionId() == 3) {
-						orangeSwDimension3.getSwQuestions().add(swQuestionAgg);
-					}
-					else if (swQuestionAgg.getDimensionId() == 4) {
-						orangeSwDimension4.getSwQuestions().add(swQuestionAgg);
-					}
 				}
 				else {
+					zoneIndex = 4;
 					// red
-					if (swQuestionAgg.getDimensionId() == 1) {
-						redSwDimension1.getSwQuestions().add(swQuestionAgg);
-					}
-					else if (swQuestionAgg.getDimensionId() == 2) {
-						redSwDimension2.getSwQuestions().add(swQuestionAgg);
-					}
-					else if (swQuestionAgg.getDimensionId() == 3) {
-						redSwDimension3.getSwQuestions().add(swQuestionAgg);
-					}
-					else if (swQuestionAgg.getDimensionId() == 4) {
-						redSwDimension4.getSwQuestions().add(swQuestionAgg);
-					}
 				}
 			}
+
+			analysis.get(zoneIndex).getSwDimensions().get(dimensionIndex).getSwQuestions().add(swQuestionAgg);
 		}
 
 		return analysis;
+	}
+
+	private List<StrengthWeaknessAnalysisVo> getInitializedAnalysisVo() {
+
+		List<StrengthWeaknessAnalysisVo> analysis = new ArrayList<>();
+
+		StrengthWeaknessAnalysisVo green = new StrengthWeaknessAnalysisVo();
+		green.setZone("green");
+		green.setSwDimensions(getInitializedDimensions());
+
+		StrengthWeaknessAnalysisVo teal = new StrengthWeaknessAnalysisVo();
+		teal.setZone("teal");
+		teal.setSwDimensions(getInitializedDimensions());
+
+		StrengthWeaknessAnalysisVo yellow = new StrengthWeaknessAnalysisVo();
+		yellow.setZone("yellow");
+		yellow.setSwDimensions(getInitializedDimensions());
+
+		StrengthWeaknessAnalysisVo orange = new StrengthWeaknessAnalysisVo();
+		orange.setZone("orange");
+		orange.setSwDimensions(getInitializedDimensions());
+
+		StrengthWeaknessAnalysisVo red = new StrengthWeaknessAnalysisVo();
+		red.setZone("red");
+		red.setSwDimensions(getInitializedDimensions());
+
+		analysis.add(green);
+		analysis.add(teal);
+		analysis.add(yellow);
+		analysis.add(orange);
+		analysis.add(red);
+
+		return analysis;
+	}
+
+	private List<SwDimensionVo> getInitializedDimensions() {
+
+		SwDimensionVo swDimension1 = new SwDimensionVo();
+		swDimension1.setSwQuestions(new ArrayList<>());
+		swDimension1.setDimensionId(1);
+		swDimension1.setDimensionName("Content Quality");
+
+		SwDimensionVo swDimension2 = new SwDimensionVo();
+		swDimension2.setSwQuestions(new ArrayList<>());
+		swDimension2.setDimensionId(2);
+		swDimension2.setDimensionName("Pedagogical Alignment");
+
+		SwDimensionVo swDimension3 = new SwDimensionVo();
+		swDimension3.setSwQuestions(new ArrayList<>());
+		swDimension3.setDimensionId(3);
+		swDimension3.setDimensionName("Design Efficacy");
+
+		SwDimensionVo swDimension4 = new SwDimensionVo();
+		swDimension4.setSwQuestions(new ArrayList<>());
+		swDimension4.setDimensionId(4);
+		swDimension4.setDimensionName("Technological Integration");
+
+		return Arrays.asList(swDimension1, swDimension2, swDimension3, swDimension4);
 	}
 
 	private Map<Integer, SwQuestionVo> getQuestionsAgg(List<LearningObjectVo> learningObjects) {
