@@ -152,71 +152,74 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 			Boolean c1 = score2 + score1 > score0 && score2 > score1;
 			Boolean c2 = score2 + score1 > score0 && score2 <= score1;
 			Boolean c3 = score2 + score1 == score0;
-			Boolean c4 = score2 + score1 < score0;
+			Boolean c4 = score2 + score1 > score0;
 
-			if (score3 > 75) {
+			if (score3 >= 90) {
+				// green
+				zoneIndex = 0;
+			}
+			else if (score3 > 75 && score3 < 90) {
 				if (c0 || c1) {
-					zoneIndex = 0;
 					// green
+					zoneIndex = 0;
 				}
 				else if (c2) {
-					zoneIndex = 1;
 					// teal
+					zoneIndex = 1;
 				}
 				else if (c3) {
-					zoneIndex = 2;
 					// yellow
+					zoneIndex = 2;
 				}
 				else {
-					zoneIndex = 3;
 					// orange
+					zoneIndex = 3;
 				}
 			}
 			else if (score3 <= 75 && score3 >= 50) {
 				if (c1) {
-					zoneIndex = 1;
 					// teal
+					zoneIndex = 1;
 				}
-				else if (c2 || c3) {
-					zoneIndex = 2;
+				else if (c2) {
 					// yellow
+					zoneIndex = 2;
 				}
 				else {
-					zoneIndex = 3;
 					// orange
+					zoneIndex = 3;
 				}
 			}
 			else if (score3 < 50 && score3 >= 25) {
 				if (c1) {
-					zoneIndex = 2;
 					// yellow
+					zoneIndex = 2;
 				}
 				else if (c2 || c3) {
-					zoneIndex = 3;
 					// orange
+					zoneIndex = 3;
 				}
 				else {
-					zoneIndex = 4;
 					// red
+					zoneIndex = 4;
+				}
+			}
+			else if (score3 < 25 && score3 > 10) {
+				if (c4) {
+					// yellow
+					zoneIndex = 2;
+				}
+				else if (c3) {
+					// orange
+					zoneIndex = 3;
+				}
+				else {
+					// red
+					zoneIndex = 4;
 				}
 			}
 			else {
-				if (c1) {
-					zoneIndex = 1;
-					// teal
-				}
-				else if (c2) {
-					zoneIndex = 2;
-					// yellow
-				}
-				else if (c3) {
-					zoneIndex = 3;
-					// orange
-				}
-				else {
-					zoneIndex = 4;
-					// red
-				}
+				zoneIndex = 4;
 			}
 
 			analysis.get(zoneIndex).getSwDimensions().get(dimensionIndex).getSwQuestions().add(swQuestionAgg);
