@@ -17,6 +17,9 @@ import xyz.qwerty.lobetoolapis.repository.LobeScoresRepository;
 import xyz.qwerty.lobetoolapis.service.AnalyticsService;
 import xyz.qwerty.lobetoolapis.service.LobeService;
 import xyz.qwerty.lobetoolapis.util.Constants;
+import xyz.qwerty.lobetoolapis.vo.CmpDimensionVo;
+import xyz.qwerty.lobetoolapis.vo.CmpQuestionVo;
+import xyz.qwerty.lobetoolapis.vo.ComparativeAnalysisVo;
 import xyz.qwerty.lobetoolapis.vo.DimensionAggScoreVo;
 import xyz.qwerty.lobetoolapis.vo.DimensionVo;
 import xyz.qwerty.lobetoolapis.vo.LearningObjectVo;
@@ -57,6 +60,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 		LearningObjectVo learningObjectVo = new LearningObjectVo();
 		learningObjectVo.setId(learningObject.getId());
 		learningObjectVo.setName(learningObject.getModuleName());
+		learningObjectVo.setRepositoryName(learningObject.getRepositoryName());
 
 		return learningObjectVo;
 	}
@@ -104,11 +108,11 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
 		List<LearningObjectVo> learningObjects = new ArrayList<>();
 
-		List<StrengthWeaknessAnalysisVo> analysis = getInitializedAnalysisVo();
-
 		lobeIds.forEach(lobeId -> {
 			learningObjects.add(lobeService.getLobeRubrik(userId, lobeId, true));
 		});
+
+		List<StrengthWeaknessAnalysisVo> analysis = getInitializedAnalysisVo();
 
 		Map<Integer, SwQuestionVo> questionsAgg = getQuestionsAgg(learningObjects);
 
@@ -334,6 +338,216 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 			});
 		});
 		return questionsAgg;
+	}
+
+	@Override
+	public List<ComparativeAnalysisVo> getComparativeAnalysis(List<Integer> lobeIds, String userId) {
+
+		List<LearningObjectVo> learningObjects = new ArrayList<>();
+
+		lobeIds.forEach(lobeId -> {
+			learningObjects.add(lobeService.getLobeRubrik(userId, lobeId, true));
+		});
+
+		Map<String, Map<Integer, SwQuestionVo>> repoQuestionsAgg = getRepowiseAggQuestions(learningObjects);
+
+		List<ComparativeAnalysisVo> analysis = new ArrayList<>();
+
+		for (Entry<String, Map<Integer, SwQuestionVo>> repoAgg : repoQuestionsAgg.entrySet()) {
+
+			String repositoryName = repoAgg.getKey();
+
+			Map<Integer, SwQuestionVo> questionsAgg = repoAgg.getValue();
+
+			ComparativeAnalysisVo cmpAnalysisVo = new ComparativeAnalysisVo();
+			cmpAnalysisVo.setRepositoryName(repositoryName);
+
+			List<CmpDimensionVo> cmpDimension = getInitializedCmpDimensions();
+			cmpAnalysisVo.setCmpDimensions(cmpDimension);
+
+			for (Entry<Integer, SwQuestionVo> entry : questionsAgg.entrySet()) {
+
+				SwQuestionVo swQuestionAgg = entry.getValue();
+				Double score0 = swQuestionAgg.getScore0();
+				Double score1 = swQuestionAgg.getScore1();
+				Double score2 = swQuestionAgg.getScore2();
+				Double score3 = swQuestionAgg.getScore3();
+
+				Double total = score0 + score1 + score2 + score3;
+
+				score0 = score0 * 100 / total;
+				score1 = score1 * 100 / total;
+				score2 = score2 * 100 / total;
+				score3 = score3 * 100 / total;
+
+				String zone;
+				int dimensionIndex;
+
+				if (swQuestionAgg.getDimensionId() == 1) {
+					dimensionIndex = 0;
+				}
+				else if (swQuestionAgg.getDimensionId() == 2) {
+					dimensionIndex = 1;
+				}
+				else if (swQuestionAgg.getDimensionId() == 3) {
+					dimensionIndex = 2;
+				}
+				else {
+					dimensionIndex = 3;
+				}
+
+				Boolean c0 = score2 + score1 == 0 && score0 == 0;
+				Boolean c1 = score2 + score1 > score0 && score2 > score1;
+				Boolean c2 = score2 + score1 > score0 && score2 <= score1;
+				Boolean c3 = score2 + score1 == score0;
+				Boolean c4 = score2 + score1 > score0;
+
+				if (score3 >= 90) {
+					zone = "green";
+				}
+				else if (score3 > 75 && score3 < 90) {
+					if (c0 || c1) {
+						zone = "green";
+					}
+					else if (c2) {
+						zone = "teal";
+					}
+					else if (c3) {
+						zone = "yellow";
+					}
+					else {
+						zone = "orange";
+					}
+				}
+				else if (score3 <= 75 && score3 >= 50) {
+					if (c1) {
+						zone = "teal";
+					}
+					else if (c2) {
+						zone = "yellow";
+					}
+					else {
+						zone = "orange";
+					}
+				}
+				else if (score3 < 50 && score3 >= 25) {
+					if (c1) {
+						zone = "yellow";
+					}
+					else if (c2 || c3) {
+						zone = "orange";
+					}
+					else {
+						zone = "red";
+					}
+				}
+				else if (score3 < 25 && score3 > 10) {
+					if (c4) {
+						zone = "yellow";
+					}
+					else if (c3) {
+						zone = "orange";
+					}
+					else {
+						zone = "red";
+					}
+				}
+				else {
+					zone = "red";
+				}
+
+				CmpQuestionVo cmpQuestionVo = new CmpQuestionVo();
+				cmpQuestionVo.setQuestion(swQuestionAgg.getQuestion());
+				cmpQuestionVo.setZone(zone);
+				cmpDimension.get(dimensionIndex).getCmpQuestions().add(cmpQuestionVo);
+			}
+
+			analysis.add(cmpAnalysisVo);
+		}
+
+		return analysis;
+	}
+
+	private Map<String, Map<Integer, SwQuestionVo>> getRepowiseAggQuestions(List<LearningObjectVo> learningObjects) {
+
+		Map<String, Map<Integer, SwQuestionVo>> questionsAgg = new HashMap<>();
+
+		learningObjects.forEach(learningObject -> {
+
+			String repositoryName = learningObject.getRepositoryName();
+
+			List<DimensionVo> dimensions = learningObject.getDimensionVos();
+
+			dimensions.forEach(d -> {
+
+				List<QuestionVo> questions = d.getQuestions();
+				questions.forEach(q -> {
+
+					Integer questionId = q.getId();
+					String question = q.getQuestion();
+					Integer score = q.getScore();
+					Integer dimensionId = q.getDimensionId();
+
+					if (!questionsAgg.containsKey(repositoryName)) {
+
+						questionsAgg.put(repositoryName, new HashMap<>());
+					}
+					Map<Integer, SwQuestionVo> repositoryAgg = questionsAgg.get(repositoryName);
+					if (!repositoryAgg.containsKey(q.getId())) {
+
+						SwQuestionVo swQuestionVo = new SwQuestionVo();
+						swQuestionVo.setQuestion(question);
+						swQuestionVo.setScore0(0d);
+						swQuestionVo.setScore1(0d);
+						swQuestionVo.setScore2(0d);
+						swQuestionVo.setScore3(0d);
+						swQuestionVo.setDimensionId(dimensionId);
+
+						questionsAgg.get(repositoryName).put(questionId, swQuestionVo);
+					}
+					SwQuestionVo swQuestionAgg = repositoryAgg.get(questionId);
+					if (score == 0) {
+						swQuestionAgg.setScore0(swQuestionAgg.getScore0() + 1);
+					}
+					else if (score == 1) {
+						swQuestionAgg.setScore1(swQuestionAgg.getScore1() + 1);
+					}
+					else if (score == 2) {
+						swQuestionAgg.setScore2(swQuestionAgg.getScore2() + 1);
+					}
+					else if (score == 3) {
+						swQuestionAgg.setScore3(swQuestionAgg.getScore3() + 1);
+					}
+				});
+			});
+		});
+
+		return questionsAgg;
+	}
+
+	private List<CmpDimensionVo> getInitializedCmpDimensions() {
+
+		CmpDimensionVo cmpDimension1 = new CmpDimensionVo();
+		cmpDimension1.setCmpQuestions(new ArrayList<>());
+		cmpDimension1.setDimensionId(1);
+		cmpDimension1.setDimensionName("Content Quality");
+
+		CmpDimensionVo cmpDimension2 = new CmpDimensionVo();
+		cmpDimension2.setCmpQuestions(new ArrayList<>());
+		cmpDimension2.setDimensionId(2);
+		cmpDimension2.setDimensionName("Pedagogical Alignment");
+
+		CmpDimensionVo cmpDimension3 = new CmpDimensionVo();
+		cmpDimension3.setCmpQuestions(new ArrayList<>());
+		cmpDimension3.setDimensionId(3);
+		cmpDimension3.setDimensionName("Design Efficacy");
+
+		CmpDimensionVo cmpDimension4 = new CmpDimensionVo();
+		cmpDimension4.setCmpQuestions(new ArrayList<>());
+		cmpDimension4.setDimensionId(4);
+		cmpDimension4.setDimensionName("Technological Integration");
+
+		return Arrays.asList(cmpDimension1, cmpDimension2, cmpDimension3, cmpDimension4);
 	}
 
 }
