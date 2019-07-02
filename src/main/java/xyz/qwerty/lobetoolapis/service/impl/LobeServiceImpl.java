@@ -401,6 +401,7 @@ public class LobeServiceImpl implements LobeService {
 		learningObjectVo.setStatus(learningObject.getStatus());
 		learningObjectVo.setName(learningObject.getModuleName());
 		learningObjectVo.setRubrikName(learningObject.getRubrik().getName());
+		learningObjectVo.setRepositoryName(learningObject.getRepositoryName());
 
 		return learningObjectVo;
 	}
