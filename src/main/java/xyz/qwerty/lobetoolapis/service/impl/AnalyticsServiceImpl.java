@@ -223,7 +223,18 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 				}
 			}
 			else {
-				zoneIndex = 4;
+				if(c1) {
+					//yellow
+					zoneIndex = 2;
+				}
+				else if(c2) {
+					//orange
+					zoneIndex = 3;
+				}
+				else{
+					//red
+					zoneIndex = 4;
+				}
 			}
 
 			analysis.get(zoneIndex).getSwDimensions().get(dimensionIndex).getSwQuestions().add(swQuestionAgg);
@@ -453,7 +464,15 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 					}
 				}
 				else {
-					zone = "red";
+					if(c1) {
+						zone = "yellow";
+					}
+					else if(c2) {
+						zone = "orange";
+					}
+					else{
+						zone = "red";
+					}
 				}
 
 				CmpQuestionVo cmpQuestionVo = new CmpQuestionVo();
