@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
 
+import xyz.qwerty.lobetoolapis.entity.LearningObject;
 import xyz.qwerty.lobetoolapis.entity.QualityDimensionMaster;
 import xyz.qwerty.lobetoolapis.entity.QuestionMaster;
 import xyz.qwerty.lobetoolapis.entity.Rubrik;
@@ -24,6 +25,7 @@ import xyz.qwerty.lobetoolapis.entity.RubrikQuestions;
 import xyz.qwerty.lobetoolapis.entity.RubrikQuestionsKey;
 import xyz.qwerty.lobetoolapis.entity.RubrikTypeMaster;
 import xyz.qwerty.lobetoolapis.entity.User;
+import xyz.qwerty.lobetoolapis.repository.LearningObjectRepository;
 import xyz.qwerty.lobetoolapis.repository.QualityDimensionMasterRepository;
 import xyz.qwerty.lobetoolapis.repository.QuestionMasterRepository;
 import xyz.qwerty.lobetoolapis.repository.RubrikQualityDimensionsRepository;
@@ -60,6 +62,9 @@ public class RubrikServiceImpl implements RubrikService {
 
 	@Autowired
 	QuestionMasterRepository			questionMasterRepository;
+	
+	@Autowired
+	LearningObjectRepository 			learningObjectRepository;
 
 	@Value("${custom.rubrik.id}")
 	private Integer						customRubrikId;
@@ -172,18 +177,26 @@ public class RubrikServiceImpl implements RubrikService {
 	}
 
 	@Override
-	public List<RubrikVo> getAllRubriks(String userId) {
-
-		Optional<User> user = userRepository.findById(userId);
-
-		if (user.isPresent()) {
-
-			Set<Rubrik> rubriks = user.get().getRubrik();
-
-			return rubriks.stream().map(r -> getRubrikVo(r)).sorted((r1, r2) -> r1.getCreatedTs().compareTo(r2.getCreatedTs())).collect(Collectors.toList());
+	public List<RubrikVo> getAllRubriks(String userId, Boolean isEvaluator) {
+		
+		if(isEvaluator) {
+			
+			List<LearningObject> learningObjects = learningObjectRepository.findAllByUser2EmailAndStatus(userId, Constants.STATUS_COMPLETE);
+			
+			return learningObjects.stream().map(l -> l.getRubrik()).distinct().map(r -> getRubrikVo(r)).sorted((r1, r2) -> r1.getCreatedTs().compareTo(r2.getCreatedTs())).collect(Collectors.toList());
 		}
-
-		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found");
+		else {
+			Optional<User> user = userRepository.findById(userId);
+	
+			if (user.isPresent()) {
+	
+				Set<Rubrik> rubriks = user.get().getRubrik();
+	
+				return rubriks.stream().map(r -> getRubrikVo(r)).sorted((r1, r2) -> r1.getCreatedTs().compareTo(r2.getCreatedTs())).collect(Collectors.toList());
+			}
+	
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found");
+		}
 	}
 
 	@Override

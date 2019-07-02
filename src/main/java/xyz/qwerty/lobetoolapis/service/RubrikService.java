@@ -10,7 +10,7 @@ public interface RubrikService {
 
 	RubrikVo createRubrik(String userId, Integer rubrikTypeId, String dimensionIds);
 
-	List<RubrikVo> getAllRubriks(String userId);
+	List<RubrikVo> getAllRubriks(String userId, Boolean isEvaluator);
 
 	RubrikVo getRubrikDetails(String userId, Integer rubrikId);
 

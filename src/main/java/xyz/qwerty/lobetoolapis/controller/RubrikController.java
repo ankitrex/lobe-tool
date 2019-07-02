@@ -81,13 +81,14 @@ public class RubrikController {
 		String accessToken = authUserService.getAccessTokenFromHeader(authorization);
 		String permission = "create_rubrik";
 
-		Boolean hasPermission = authUserService.checkUserAccess(accessToken, permission);
+		Boolean hasGenPermission = authUserService.checkUserAccess(accessToken, "create_rubrik");
+		Boolean hasEvalPermission = authUserService.checkUserAccess(accessToken, "evaluator_analytics");
 
-		if (hasPermission) {
+		if (hasGenPermission || hasEvalPermission) {
 
 			String userId = authUserService.getUserId(accessToken);
 
-			List<RubrikVo> rubriks = rubrikService.getAllRubriks(userId);
+			List<RubrikVo> rubriks = rubrikService.getAllRubriks(userId, hasEvalPermission);
 
 			responseBuilder.setData(rubriks);
 

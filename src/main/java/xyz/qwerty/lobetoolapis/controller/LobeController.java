@@ -194,15 +194,15 @@ public class LobeController {
 		ResponseBuilder responseBuilder = new ResponseBuilder();
 
 		String accessToken = authUserService.getAccessTokenFromHeader(authorization);
-		String permission = "evaluate_rubrik";
 
-		Boolean hasPermission = authUserService.checkUserAccess(accessToken, permission);
+		Boolean hasEvalPermission = authUserService.checkUserAccess(accessToken, "evaluate_rubrik");
+		Boolean hasGenPermission = authUserService.checkUserAccess(accessToken, "generator_analytics");
 
-		if (hasPermission) {
+		if (hasEvalPermission || hasGenPermission) {
 
 			String userId = authUserService.getUserId(accessToken);
 
-			LearningObjectVo learningObjectVo = lobeService.getLobeRubrik(userId, lobeId, false);
+			LearningObjectVo learningObjectVo = lobeService.getLobeRubrik(userId, lobeId, hasGenPermission);
 
 			responseBuilder.setCode(HttpStatus.OK.value());
 			responseBuilder.setStatus(HttpStatus.OK.getReasonPhrase());

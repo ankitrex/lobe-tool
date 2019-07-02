@@ -11,4 +11,6 @@ public interface LearningObjectRepository extends JpaRepository<LearningObject, 
 	List<LearningObject> findAllByRubrikIdAndStatus(Integer rubrikId, String status);
 
 	List<LearningObject> findAllByRubrikIdAndUser2EmailAndStatus(Integer rubrikId, String email, String status);
+	
+	List<LearningObject> findAllByUser2EmailAndStatus(String email, String status);
 }
