@@ -190,7 +190,7 @@ public class AuthUserServiceImpl implements AuthUserService {
 			return true;
 		}
 		else {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email doesn't exists");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email does not exist");
 		}
 	}
 
