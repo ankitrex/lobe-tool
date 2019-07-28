@@ -3,6 +3,7 @@ package xyz.qwerty.lobetoolapis.service.impl;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -212,7 +213,9 @@ public class LobeServiceImpl implements LobeService {
 
 			List<LearningObjectVo> learningObjs = learningObjects.stream().map(l -> getEvalLearningObject(l, type)).collect(Collectors.toList());
 			learningObjs.addAll(lobes);
-
+			
+			Collections.sort(learningObjs, (l1,l2)->l2.getCreatedTs().compareTo(l1.getCreatedTs()));
+			
 			return learningObjs;
 		}
 
